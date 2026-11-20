@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>انترفيو نيرس | Interview Nurse - دليلك الشامل لمقابلات التمريض</title>
+    <title>انترفيو نيرس | Interview Nurse</title>
 
-    <!-- Google Fonts: Cairo for crisp, modern Arabic typography -->
+    <!-- Google Fonts: Cairo (Arabic) & Plus Jakarta Sans (English) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Font Awesome 6 for clean medical & UI icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -16,19 +16,21 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind Custom Configuration for Medical Palette & Font -->
+    <!-- Tailwind Custom Configuration for Medical Palette & Bilingual Fonts -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         cairo: ['Cairo', 'sans-serif'],
+                        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
                         medical: {
                             50: '#f0fdfa',
                             100: '#ccfbf1',
                             200: '#99f6e4',
+                            400: '#2dd4bf',
                             500: '#14b8a6',
                             600: '#0d9488',
                             700: '#0f766e',
@@ -41,43 +43,56 @@
         }
     </script>
 </head>
-<body class="font-cairo bg-slate-50 text-slate-800 antialiased selection:bg-medical-600 selection:text-white flex flex-col min-h-screen">
+<body id="app-body" class="font-cairo bg-slate-50 text-slate-800 antialiased selection:bg-medical-600 selection:text-white flex flex-col min-h-screen">
 
     <!-- ==================== Toast Notification Container (No alert()) ==================== -->
-    <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="toast-container" class="fixed bottom-5 end-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- ==================== Sticky Top Navigation Bar ==================== -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20 gap-3">
-                
-                <!-- Brand Logo & Attribution Subtitle -->
-                <button onclick="showHomeSection()" class="flex items-center gap-3 text-right group focus:outline-none">
-                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-medical-600 to-medical-700 text-white flex items-center justify-center shadow-md shadow-medical-600/20 group-hover:scale-105 transition-transform">
+            <div class="flex items-center justify-between h-20 gap-2 sm:gap-4">
+
+                <!-- Brand Logo & Uppercase Signature Subtitle -->
+                <button onclick="showHomeSection()" class="flex items-center gap-3 text-start group focus:outline-none min-w-0">
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-medical-600 to-medical-700 text-white flex items-center justify-center shadow-md shadow-medical-600/20 group-hover:scale-105 transition-transform flex-shrink-0">
                         <i class="fa-solid fa-stethoscope text-xl sm:text-2xl"></i>
                     </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">انترفيو نيرس</span>
-                            <span class="hidden sm:inline-block text-xs font-bold px-2 py-0.5 rounded-full bg-medical-50 text-medical-700 border border-medical-200">Interview Nurse</span>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span data-i18n="brandTitle" class="text-base sm:text-xl font-extrabold text-slate-900 tracking-tight truncate">انترفيو نيرس</span>
+                            <span data-i18n="brandTag" class="hidden md:inline-block text-xs font-bold px-2 py-0.5 rounded-full bg-medical-50 text-medical-700 border border-medical-200">Interview Nurse</span>
                         </div>
-                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium">
-                            إعداد وتصميم <span class="text-medical-700 font-bold">nurse / Donia Mansour</span>
+                        <p class="text-[10px] sm:text-xs text-slate-500 font-medium truncate">
+                            <span data-i18n="headerPreparedBy">إعداد وتصميم</span>
+                            <span class="text-medical-700 font-extrabold uppercase tracking-wide ms-1" dir="ltr">NURSE / DONIA MANSOUR</span>
                         </p>
                     </div>
                 </button>
 
-                <!-- Navigation Actions -->
-                <nav class="flex items-center gap-2 sm:gap-3">
-                    <button onclick="scrollToCountries()" class="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-medical-700 hover:bg-medical-50 transition-colors">
+                <!-- Navigation Actions & Prominent Language Switcher -->
+                <nav class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                    <!-- Select Country Nav Link (Desktop) -->
+                    <button onclick="scrollToCountries()" class="hidden lg:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-medical-700 hover:bg-medical-50 transition-colors">
                         <i class="fa-solid fa-earth-asia"></i>
-                        <span>اختيار الدولة</span>
+                        <span data-i18n="navCountries">اختيار الدولة</span>
+                    </button>
+
+                    <!-- Language Switcher Icon/Button -->
+                    <button
+                        id="lang-toggle-btn"
+                        onclick="toggleLanguage()"
+                        aria-label="Switch Language"
+                        class="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold text-medical-800 bg-medical-50 hover:bg-medical-100 border border-medical-200/90 shadow-sm transition-all active:scale-95"
+                    >
+                        <i class="fa-solid fa-globe text-medical-600 text-sm sm:text-base"></i>
+                        <span id="lang-toggle-label">EN</span>
                     </button>
 
                     <!-- Highlighted Mock Exam Button -->
-                    <button onclick="openQuizModal()" class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-l from-medical-600 to-medical-700 hover:from-medical-700 hover:to-medical-800 shadow-md shadow-medical-600/25 hover:shadow-lg transition-all active:scale-95">
-                        <i class="fa-solid fa-clipboard-check text-base"></i>
-                        <span>الاختبار التجريبي</span>
+                    <button onclick="openQuizModal()" class="inline-flex items-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-l from-medical-600 to-medical-700 hover:from-medical-700 hover:to-medical-800 shadow-md shadow-medical-600/25 hover:shadow-lg transition-all active:scale-95">
+                        <i class="fa-solid fa-clipboard-check text-sm sm:text-base"></i>
+                        <span data-i18n="navMockTest">الاختبار التجريبي</span>
                     </button>
                 </nav>
             </div>
@@ -89,7 +104,7 @@
 
         <!-- ==================== Hero Welcome Section ==================== -->
         <section id="hero-section" class="relative overflow-hidden bg-gradient-to-bl from-medical-800 via-medical-700 to-slate-900 text-white py-14 sm:py-20">
-            <!-- Subtle decorative medical pulse background pattern -->
+            <!-- Subtle decorative medical grid pattern -->
             <div class="absolute inset-0 opacity-10 pointer-events-none">
                 <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -105,16 +120,18 @@
                 <!-- Badge -->
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-medical-100 text-xs sm:text-sm font-semibold mb-6">
                     <i class="fa-solid fa-heart-pulse text-medical-200 animate-pulse"></i>
-                    <span>منصتك المتخصصة للتحضير لمقابلات التمريض في الوطن العربي</span>
+                    <span data-i18n="heroBadge">منصتك المتخصصة للتحضير لمقابلات التمريض في الوطن العربي</span>
                 </div>
 
                 <!-- Headline -->
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-5 max-w-4xl mx-auto">
-                    استعدي بثقة لاجتياز <span class="text-medical-200">مقابلة عمل التمريض</span> بأعلى معايير الاحترافية
+                    <span data-i18n="heroTitleStart">استعدي بثقة لاجتياز</span>
+                    <span data-i18n="heroTitleHighlight" class="text-medical-200">مقابلة عمل التمريض</span>
+                    <span data-i18n="heroTitleEnd">بأعلى معايير الاحترافية</span>
                 </h1>
 
                 <!-- Subtitle -->
-                <p class="text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed mb-8">
+                <p data-i18n="heroSubtitle" class="text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed mb-8">
                     اختاري الدولة العربية التي تستعدين للتقديم بها، وتعرفي على أهم الأسئلة المتوقعة وإجاباتها النموذجية وفق معايير الجودة والسلامة، ثم اختبري جاهزيتك بمواقف تمريضية واقعية.
                 </p>
 
@@ -122,27 +139,27 @@
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                     <button onclick="scrollToCountries()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl bg-white text-medical-800 font-extrabold text-sm sm:text-base shadow-lg hover:bg-medical-50 transition-all active:scale-95">
                         <i class="fa-solid fa-hospital-user text-medical-600"></i>
-                        <span>استعراض أسئلة الدول</span>
+                        <span data-i18n="heroCtaCountries">استعراض أسئلة الدول</span>
                     </button>
                     <button onclick="openQuizModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl bg-medical-600/90 hover:bg-medical-500 text-white border border-medical-200/30 font-extrabold text-sm sm:text-base shadow-lg transition-all active:scale-95">
                         <i class="fa-solid fa-list-check"></i>
-                        <span>ابدئي الاختبار التجريبي (10 مواقف)</span>
+                        <span data-i18n="heroCtaQuiz">ابدئي الاختبار التجريبي (10 مواقف)</span>
                     </button>
                 </div>
 
                 <!-- Quick Stats Bar -->
                 <div class="mt-12 grid grid-cols-3 gap-3 sm:gap-6 max-w-2xl mx-auto pt-8 border-t border-white/15">
                     <div class="text-center">
-                        <div class="text-xl sm:text-2xl font-extrabold text-white">3 دول</div>
-                        <div class="text-xs sm:text-sm text-medical-100 mt-1">السعودية، مصر، الإمارات</div>
+                        <div data-i18n="stat1Val" class="text-xl sm:text-2xl font-extrabold text-white">3 دول</div>
+                        <div data-i18n="stat1Lbl" class="text-xs sm:text-sm text-medical-100 mt-1">السعودية، مصر، الإمارات</div>
                     </div>
                     <div class="text-center border-x border-white/15 px-2">
-                        <div class="text-xl sm:text-2xl font-extrabold text-white">+27 سؤالاً</div>
-                        <div class="text-xs sm:text-sm text-medical-100 mt-1">بإجابات نموذجية ونصائح</div>
+                        <div data-i18n="stat2Val" class="text-xl sm:text-2xl font-extrabold text-white">+27 سؤالاً</div>
+                        <div data-i18n="stat2Lbl" class="text-xs sm:text-sm text-medical-100 mt-1">بإجابات نموذجية ونصائح</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-xl sm:text-2xl font-extrabold text-white">10 مواقف</div>
-                        <div class="text-xs sm:text-sm text-medical-100 mt-1">اختبار تجريبي تفاعلي</div>
+                        <div data-i18n="stat3Val" class="text-xl sm:text-2xl font-extrabold text-white">10 مواقف</div>
+                        <div data-i18n="stat3Lbl" class="text-xs sm:text-sm text-medical-100 mt-1">اختبار تجريبي تفاعلي</div>
                     </div>
                 </div>
             </div>
@@ -151,23 +168,22 @@
         <!-- ==================== Country Selection Section ==================== -->
         <section id="countries-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
             <div class="text-center mb-10">
-                <span class="inline-block px-3.5 py-1 rounded-full bg-medical-50 text-medical-700 font-bold text-xs sm:text-sm border border-medical-200 mb-3">
+                <span data-i18n="stepOneBadge" class="inline-block px-3.5 py-1 rounded-full bg-medical-50 text-medical-700 font-bold text-xs sm:text-sm border border-medical-200 mb-3">
                     الخطوة الأولى
                 </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">اختاري الدولة العربية لعرض أسئلة المقابلة</h2>
-                <p class="text-slate-500 text-sm sm:text-base mt-2 max-w-xl mx-auto">
+                <h2 data-i18n="countriesHeading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">اختاري الدولة العربية لعرض أسئلة المقابلة</h2>
+                <p data-i18n="countriesSubheading" class="text-slate-500 text-sm sm:text-base mt-2 max-w-xl mx-auto">
                     تم تخصيص كل بنك أسئلة ليعكس بيئة العمل الفعلية ومعايير الاعتماد واللوائح المهنية في الدولة المختارة.
                 </p>
             </div>
 
             <!-- 3 Interactive Country Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
+
                 <!-- Card 1: Saudi Arabia -->
-                <button id="card-saudi" onclick="selectCountry('saudi')" class="country-card group text-right bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-medical-600 shadow-sm hover:shadow-xl hover:shadow-medical-600/10 transition-all duration-300 flex flex-col justify-between focus:outline-none">
+                <button id="card-saudi" onclick="selectCountry('saudi')" class="country-card group text-start bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-medical-600 shadow-sm hover:shadow-xl hover:shadow-medical-600/10 transition-all duration-300 flex flex-col justify-between focus:outline-none">
                     <div>
                         <div class="flex items-center justify-between mb-5">
-                            <!-- Clean SVG Saudi Flag -->
                             <div class="w-16 h-11 rounded-xl overflow-hidden shadow-sm border border-slate-200 flex-shrink-0">
                                 <svg viewBox="0 0 60 40" class="w-full h-full">
                                     <rect width="60" height="40" fill="#006C35"/>
@@ -176,28 +192,27 @@
                                     <polygon points="44,28 47,26.5 47,29.5" fill="#ffffff"/>
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span data-i18n="qCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 9 أسئلة نموذجية
                             </span>
                         </div>
-                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-medical-700 transition-colors mb-2">
+                        <h3 data-i18n="saudiName" class="text-xl font-extrabold text-slate-900 group-hover:text-medical-700 transition-colors mb-2">
                             المملكة العربية السعودية
                         </h3>
-                        <p class="text-sm text-slate-600 leading-relaxed mb-5">
-                            مقابلات وزارة الصحة والتجمعات الصحية والمستشفيات الخاصة، معايير الاعتماد <strong>سباهي (CBAHI)</strong>، هيئة التخصصات الصحية <strong>(SCFHS)</strong>، وأهداف سلامة المرضى.
+                        <p data-i18n="saudiDesc" class="text-sm text-slate-600 leading-relaxed mb-5">
+                            مقابلات وزارة الصحة والتجمعات الصحية والمستشفيات الخاصة، معايير الاعتماد سباهي (CBAHI)، هيئة التخصصات الصحية (SCFHS / ممارس بلس)، واختبار البرومترك.
                         </p>
                     </div>
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-medical-700 font-bold text-sm">
-                        <span>استعراض الأسئلة والإجابات</span>
-                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                        <span data-i18n="viewQuestionsCta">استعراض الأسئلة والإجابات</span>
+                        <i class="dir-arrow fa-solid fa-arrow-left transition-transform"></i>
                     </div>
                 </button>
 
                 <!-- Card 2: Egypt -->
-                <button id="card-egypt" onclick="selectCountry('egypt')" class="country-card group text-right bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-medical-600 shadow-sm hover:shadow-xl hover:shadow-medical-600/10 transition-all duration-300 flex flex-col justify-between focus:outline-none">
+                <button id="card-egypt" onclick="selectCountry('egypt')" class="country-card group text-start bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-medical-600 shadow-sm hover:shadow-xl hover:shadow-medical-600/10 transition-all duration-300 flex flex-col justify-between focus:outline-none">
                     <div>
                         <div class="flex items-center justify-between mb-5">
-                            <!-- Clean SVG Egypt Flag -->
                             <div class="w-16 h-11 rounded-xl overflow-hidden shadow-sm border border-slate-200 flex-shrink-0">
                                 <svg viewBox="0 0 60 40" class="w-full h-full">
                                     <rect width="60" height="13.33" y="0" fill="#CE1126"/>
@@ -206,28 +221,27 @@
                                     <circle cx="30" cy="20" r="3.5" fill="#C09300"/>
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                            <span data-i18n="qCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
                                 9 أسئلة نموذجية
                             </span>
                         </div>
-                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-medical-700 transition-colors mb-2">
+                        <h3 data-i18n="egyptName" class="text-xl font-extrabold text-slate-900 group-hover:text-medical-700 transition-colors mb-2">
                             جمهورية مصر العربية
                         </h3>
-                        <p class="text-sm text-slate-600 leading-relaxed mb-5">
-                            مقابلات المستشفيات الكبرى والمراكز الطبية التخصصية وهيئة الرعاية الصحية، معايير الجودة <strong>GAHAR</strong>، الفرز في الطوارئ، ومكافحة العدوى.
+                        <p data-i18n="egyptDesc" class="text-sm text-slate-600 leading-relaxed mb-5">
+                            مقابلات المستشفيات الكبرى والجامعية وهيئة الرعاية الصحية، معايير الجودة (GAHAR)، ترخيص نقابة التمريض، الفرز في الطوارئ ومكافحة العدوى.
                         </p>
                     </div>
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-medical-700 font-bold text-sm">
-                        <span>استعراض الأسئلة والإجابات</span>
-                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                        <span data-i18n="viewQuestionsCta">استعراض الأسئلة والإجابات</span>
+                        <i class="dir-arrow fa-solid fa-arrow-left transition-transform"></i>
                     </div>
                 </button>
 
                 <!-- Card 3: UAE -->
-                <button id="card-uae" onclick="selectCountry('uae')" class="country-card group text-right bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-medical-600 shadow-sm hover:shadow-xl hover:shadow-medical-600/10 transition-all duration-300 flex flex-col justify-between focus:outline-none">
+                <button id="card-uae" onclick="selectCountry('uae')" class="country-card group text-start bg-white rounded-3xl p-6 sm:p-7 border-2 border-slate-200 hover:border-medical-600 shadow-sm hover:shadow-xl hover:shadow-medical-600/10 transition-all duration-300 flex flex-col justify-between focus:outline-none">
                     <div>
                         <div class="flex items-center justify-between mb-5">
-                            <!-- Clean SVG UAE Flag -->
                             <div class="w-16 h-11 rounded-xl overflow-hidden shadow-sm border border-slate-200 flex-shrink-0">
                                 <svg viewBox="0 0 60 40" class="w-full h-full">
                                     <rect width="45" height="13.33" x="15" y="0" fill="#00732F"/>
@@ -236,20 +250,20 @@
                                     <rect width="15" height="40" x="0" y="0" fill="#FF0000"/>
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
+                            <span data-i18n="qCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
                                 9 أسئلة نموذجية
                             </span>
                         </div>
-                        <h3 class="text-xl font-extrabold text-slate-900 group-hover:text-medical-700 transition-colors mb-2">
+                        <h3 data-i18n="uaeName" class="text-xl font-extrabold text-slate-900 group-hover:text-medical-700 transition-colors mb-2">
                             الإمارات العربية المتحدة
                         </h3>
-                        <p class="text-sm text-slate-600 leading-relaxed mb-5">
-                            مقابلات هيئات الترخيص <strong>DHA / DOH / MOHAP</strong>، معايير <strong>JCI</strong> العالمية، التواصل باللغة الإنجليزية الطبية، وبروتوكول <strong>SBAR</strong> في بيئة متعددة الجنسيات.
+                        <p data-i18n="uaeDesc" class="text-sm text-slate-600 leading-relaxed mb-5">
+                            مقابلات هيئات الترخيص (DHA / DOH / MOHAP)، معايير الاعتماد العالمية (JCI)، التواصل باللغة الإنجليزية الطبية، وبروتوكول (SBAR) في بيئة متعددة الثقافات.
                         </p>
                     </div>
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-medical-700 font-bold text-sm">
-                        <span>استعراض الأسئلة والإجابات</span>
-                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                        <span data-i18n="viewQuestionsCta">استعراض الأسئلة والإجابات</span>
+                        <i class="dir-arrow fa-solid fa-arrow-left transition-transform"></i>
                     </div>
                 </button>
             </div>
@@ -258,21 +272,21 @@
         <!-- ==================== Dynamic Country Questions Bank Section ==================== -->
         <section id="questions-section" class="hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
             <div class="bg-white rounded-3xl border border-slate-200 shadow-lg shadow-slate-200/50 overflow-hidden">
-                
+
                 <!-- Country Bank Header -->
                 <div class="bg-gradient-to-l from-medical-700 to-medical-600 p-6 sm:p-8 text-white">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <div class="inline-flex items-center gap-2 text-xs font-bold bg-white/15 px-3 py-1 rounded-full mb-2">
                                 <i class="fa-solid fa-file-medical"></i>
-                                <span id="selected-country-badge">بنك الأسئلة النموذجية</span>
+                                <span id="selected-country-badge"></span>
                             </div>
                             <h2 id="selected-country-title" class="text-2xl sm:text-3xl font-extrabold"></h2>
                             <p id="selected-country-subtitle" class="text-medical-100 text-sm mt-1"></p>
                         </div>
                         <button onclick="openQuizModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-medical-800 font-extrabold text-sm shadow-md hover:bg-medical-50 transition-all active:scale-95 flex-shrink-0">
                             <i class="fa-solid fa-clipboard-question text-medical-600"></i>
-                            <span>جربي الاختبار التجريبي</span>
+                            <span data-i18n="tryMockTestBtn">جربي الاختبار التجريبي</span>
                         </button>
                     </div>
                 </div>
@@ -281,29 +295,32 @@
                 <div class="p-5 sm:p-6 bg-slate-50 border-b border-slate-200 space-y-4">
                     <!-- Search Input -->
                     <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <i class="fa-solid fa-magnifying-glass absolute start-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         <input
                             type="text"
                             id="question-search"
                             oninput="renderQuestions()"
-                            placeholder="ابحثي في الأسئلة أو المصطلحات (مثل: سباهي، GAHAR، JCI، الدواء، SBAR)..."
-                            class="w-full pr-11 pl-4 py-3 rounded-2xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all"
+                            placeholder="ابحثي في الأسئلة أو المصطلحات..."
+                            class="w-full ps-11 pe-4 py-3 rounded-2xl border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-medical-500 focus:border-medical-500 transition-all"
                         >
                     </div>
 
                     <!-- Category Filter Pills -->
                     <div class="flex flex-wrap items-center gap-2">
                         <button onclick="setCategoryFilter('all')" data-cat="all" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-medical-600 text-white shadow-sm">
-                            الكل
+                            <span data-i18n="catAll">الكل</span>
                         </button>
                         <button onclick="setCategoryFilter('personal')" data-cat="personal" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-white text-slate-600 border border-slate-200 hover:bg-medical-50 hover:text-medical-700">
-                            <i class="fa-solid fa-user-nurse ml-1"></i> أسئلة شخصية ومهنية
+                            <i class="fa-solid fa-user-nurse me-1"></i>
+                            <span data-i18n="catPersonal">شخصي ومهني</span>
                         </button>
                         <button onclick="setCategoryFilter('clinical')" data-cat="clinical" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-white text-slate-600 border border-slate-200 hover:bg-medical-50 hover:text-medical-700">
-                            <i class="fa-solid fa-heart-pulse ml-1"></i> أسئلة فنية وتمريضية
+                            <i class="fa-solid fa-heart-pulse me-1"></i>
+                            <span data-i18n="catClinical">فني وتمريضي</span>
                         </button>
                         <button onclick="setCategoryFilter('quality')" data-cat="quality" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all bg-white text-slate-600 border border-slate-200 hover:bg-medical-50 hover:text-medical-700">
-                            <i class="fa-solid fa-shield-halved ml-1"></i> معايير الجودة والسلامة
+                            <i class="fa-solid fa-shield-halved me-1"></i>
+                            <span data-i18n="catQuality">معايير الجودة والتراخيص</span>
                         </button>
                     </div>
                 </div>
@@ -318,23 +335,23 @@
         <!-- ==================== Interactive Situational Mock Exam Banner ==================== -->
         <section id="quiz-promo-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
             <div class="rounded-3xl bg-gradient-to-l from-slate-900 via-medical-900 to-medical-800 p-7 sm:p-10 text-white shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6">
-                <div class="flex items-start gap-4 sm:gap-5 text-right">
+                <div class="flex items-start gap-4 sm:gap-5 text-start">
                     <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-medical-500/20 border border-medical-400/30 flex items-center justify-center flex-shrink-0 text-medical-200">
                         <i class="fa-solid fa-clipboard-check text-2xl sm:text-3xl"></i>
                     </div>
                     <div>
-                        <span class="inline-block text-xs font-bold text-medical-200 bg-white/10 px-3 py-1 rounded-full mb-2">
+                        <span data-i18n="promoBadge" class="inline-block text-xs font-bold text-medical-200 bg-white/10 px-3 py-1 rounded-full mb-2">
                             تقييم فوري + تبرير علمي ومهني
                         </span>
-                        <h3 class="text-xl sm:text-2xl font-extrabold mb-2">هل أنتِ جاهزة لمواقف المقابلة العملية؟</h3>
-                        <p class="text-slate-200 text-sm sm:text-base max-w-2xl leading-relaxed">
-                            خوضي الاختبار التجريبي المكون من 10 مواقف تمريضية واقعية (أخطاء الدواء، Code Blue، وخز الإبر، سقوط المريض، سرية المعلومات، وتحديد الأولويات) واكتشفي مستواكِ المهني فوراً.
+                        <h3 data-i18n="promoTitle" class="text-xl sm:text-2xl font-extrabold mb-2">هل أنتِ جاهزة لمواقف المقابلة العملية؟</h3>
+                        <p data-i18n="promoDesc" class="text-slate-200 text-sm sm:text-base max-w-2xl leading-relaxed">
+                            خوضي الاختبار التجريبي المكون من 10 مواقف تمريضية واقعية (أخطاء الدواء، Code Blue، وخز الإبر، الأوامر الشفهية، سرية المعلومات، وتحديد الأولويات) واكتشفي مستواكِ المهني فوراً.
                         </p>
                     </div>
                 </div>
                 <button onclick="openQuizModal()" class="w-full lg:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-white text-medical-900 font-extrabold text-sm sm:text-base shadow-lg hover:bg-medical-50 transition-all active:scale-95 flex-shrink-0">
                     <i class="fa-solid fa-play text-medical-600"></i>
-                    <span>ابدئي الاختبار التجريبي الآن</span>
+                    <span data-i18n="promoCta">ابدئي الاختبار التجريبي الآن</span>
                 </button>
             </div>
         </section>
@@ -342,21 +359,21 @@
         <!-- ==================== Interactive Quiz View (Full Section Mode) ==================== -->
         <section id="quiz-section" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
             <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-                
+
                 <!-- Quiz Header -->
                 <div class="bg-gradient-to-l from-medical-700 to-medical-600 p-6 sm:p-7 text-white flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center">
+                        <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
                             <i class="fa-solid fa-clipboard-check text-xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl sm:text-2xl font-extrabold">الاختبار التجريبي للمواقف التمريضية</h2>
-                            <p class="text-xs sm:text-sm text-medical-100">اختاري التصرف المهني الأدق لكل موقف إكلينيكي</p>
+                            <h2 data-i18n="quizHeaderTitle" class="text-xl sm:text-2xl font-extrabold">الاختبار التجريبي للمواقف التمريضية</h2>
+                            <p data-i18n="quizHeaderSub" class="text-xs sm:text-sm text-medical-100">اختاري التصرف المهني الأدق لكل موقف إكلينيكي</p>
                         </div>
                     </div>
                     <button onclick="closeQuizModal()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-bold transition-colors">
-                        <i class="fa-solid fa-arrow-right"></i>
-                        <span>العودة للرئيسية</span>
+                        <i class="dir-back-arrow fa-solid fa-arrow-right"></i>
+                        <span data-i18n="backToHome">العودة للرئيسية</span>
                     </button>
                 </div>
 
@@ -365,8 +382,8 @@
                     <!-- Progress Info & Bar -->
                     <div class="mb-6">
                         <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-600 mb-2">
-                            <span id="quiz-progress-text">الموقف 1 من 10</span>
-                            <span id="quiz-score-live" class="text-medical-700 bg-medical-50 px-3 py-1 rounded-full border border-medical-200">النقاط: 0</span>
+                            <span id="quiz-progress-text"></span>
+                            <span id="quiz-score-live" class="text-medical-700 bg-medical-50 px-3 py-1 rounded-full border border-medical-200"></span>
                         </div>
                         <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                             <div id="quiz-progress-bar" class="h-full bg-gradient-to-l from-medical-500 to-medical-700 rounded-full transition-all duration-500" style="width: 10%;"></div>
@@ -375,19 +392,14 @@
 
                     <!-- Scenario Category Badge -->
                     <div class="mb-3">
-                        <span id="quiz-scenario-tag" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-medical-50 text-medical-700 border border-medical-200">
-                            <i class="fa-solid fa-stethoscope"></i>
-                            <span>موقف عملي</span>
-                        </span>
+                        <span id="quiz-scenario-tag" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-medical-50 text-medical-700 border border-medical-200"></span>
                     </div>
 
                     <!-- Scenario Text -->
                     <h3 id="quiz-question-text" class="text-lg sm:text-xl font-extrabold text-slate-900 leading-relaxed mb-6"></h3>
 
                     <!-- 4 Multiple Choice Options -->
-                    <div id="quiz-options-container" class="space-y-3">
-                        <!-- Dynamically populated -->
-                    </div>
+                    <div id="quiz-options-container" class="space-y-3"></div>
 
                     <!-- Immediate Feedback & Professional Rationale Box -->
                     <div id="quiz-feedback-box" class="hidden mt-6 rounded-2xl p-5 border-2 transition-all">
@@ -403,8 +415,8 @@
                     <!-- Next Button -->
                     <div class="mt-7 flex justify-end">
                         <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-medical-600 hover:bg-medical-700 text-white font-extrabold text-sm sm:text-base shadow-md transition-all active:scale-95">
-                            <span id="quiz-next-btn-text">الموقف التالي</span>
-                            <i class="fa-solid fa-arrow-left"></i>
+                            <span id="quiz-next-btn-text"></span>
+                            <i class="dir-arrow fa-solid fa-arrow-left"></i>
                         </button>
                     </div>
                 </div>
@@ -412,20 +424,20 @@
                 <!-- Quiz Final Results View -->
                 <div id="quiz-results-view" class="hidden p-7 sm:p-10 text-center">
                     <div id="result-badge-icon" class="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-5 shadow-md"></div>
-                    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">اكتمل الاختبار التجريبي!</h3>
+                    <h3 data-i18n="resultCompleteTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">اكتمل الاختبار التجريبي!</h3>
                     <p id="result-evaluation-text" class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto leading-relaxed mb-6"></p>
 
                     <!-- Score Percentage Card -->
                     <div class="max-w-md mx-auto bg-slate-50 rounded-3xl p-6 border border-slate-200 mb-8">
                         <div class="text-5xl font-extrabold text-medical-700 mb-2" id="result-percentage">0%</div>
-                        <div class="text-sm font-bold text-slate-500 mb-4" id="result-fraction">0 من 10 إجابات صحيحة</div>
+                        <div class="text-sm font-bold text-slate-500 mb-4" id="result-fraction"></div>
                         <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-200">
                             <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3">
-                                <div class="text-xs text-emerald-700 font-bold">إجابات صحيحة</div>
+                                <div data-i18n="resultCorrectLbl" class="text-xs text-emerald-700 font-bold">إجابات صحيحة</div>
                                 <div class="text-xl font-extrabold text-emerald-800" id="result-correct-count">0</div>
                             </div>
                             <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3">
-                                <div class="text-xs text-rose-700 font-bold">تحتاج مراجعة</div>
+                                <div data-i18n="resultWrongLbl" class="text-xs text-rose-700 font-bold">تحتاج مراجعة</div>
                                 <div class="text-xl font-extrabold text-rose-800" id="result-wrong-count">0</div>
                             </div>
                         </div>
@@ -435,11 +447,11 @@
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
                         <button onclick="restartQuiz()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-medical-600 hover:bg-medical-700 text-white font-extrabold text-sm sm:text-base shadow-md transition-all active:scale-95">
                             <i class="fa-solid fa-rotate-right"></i>
-                            <span>إعادة الاختبار التجريبي</span>
+                            <span data-i18n="retakeQuizBtn">إعادة الاختبار التجريبي</span>
                         </button>
                         <button onclick="closeQuizModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-sm sm:text-base transition-all active:scale-95">
                             <i class="fa-solid fa-book-medical text-medical-700"></i>
-                            <span>العودة لبنك الأسئلة</span>
+                            <span data-i18n="backToBankBtn">العودة لبنك الأسئلة</span>
                         </button>
                     </div>
                 </div>
@@ -448,372 +460,1010 @@
 
     </main>
 
-    <!-- ==================== Footer with Prominent Signature ==================== -->
+    <!-- ==================== Footer with Prominent Uppercase Signature ==================== -->
     <footer class="bg-slate-900 text-slate-300 border-t border-slate-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                
+
                 <!-- Brand Info -->
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-medical-600 text-white flex items-center justify-center shadow-lg">
+                    <div class="w-11 h-11 rounded-2xl bg-medical-600 text-white flex items-center justify-center shadow-lg flex-shrink-0">
                         <i class="fa-solid fa-stethoscope text-xl"></i>
                     </div>
                     <div>
-                        <h4 class="text-white font-extrabold text-lg">انترفيو نيرس | Interview Nurse</h4>
-                        <p class="text-xs text-slate-400">دليلك المهني الموثوق لمقابلات التمريض في الوطن العربي</p>
+                        <h4 data-i18n="footerBrand" class="text-white font-extrabold text-lg">انترفيو نيرس | Interview Nurse</h4>
+                        <p data-i18n="footerTagline" class="text-xs text-slate-400">دليلك المهني الموثوق لمقابلات التمريض في الوطن العربي</p>
                     </div>
                 </div>
 
-                <!-- Required Attribution Signature Badge -->
+                <!-- Required Attribution Signature Badge (Uppercase NURSE / DONIA MANSOUR) -->
                 <div class="bg-slate-800/90 border border-medical-500/40 rounded-2xl px-6 py-3.5 text-center shadow-md">
                     <p class="text-sm sm:text-base font-bold text-white flex items-center justify-center gap-2 flex-wrap">
                         <i class="fa-solid fa-heart-pulse text-medical-400"></i>
-                        <span>الموقع من إعداد وتصميم</span>
-                        <span class="text-medical-300 font-extrabold tracking-wide" dir="ltr">nurse / Donia Mansour</span>
+                        <span data-i18n="footerSignaturePrefix">الموقع من إعداد وتصميم</span>
+                        <span class="text-medical-300 font-extrabold uppercase tracking-wider" dir="ltr">NURSE / DONIA MANSOUR</span>
                     </p>
                 </div>
             </div>
 
             <div class="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-                <p>جميع الحقوق محفوظة &copy; <span id="current-year"></span> انترفيو نيرس - Interview Nurse</p>
+                <p>
+                    <span data-i18n="footerRights">جميع الحقوق محفوظة</span> &copy; <span id="current-year"></span>
+                    <span data-i18n="footerBrandShort">انترفيو نيرس - Interview Nurse</span>
+                </p>
                 <p class="flex items-center gap-1.5">
                     <i class="fa-solid fa-shield-heart text-medical-500"></i>
-                    <span>محتوى تدريبي مخصص لدعم الكوادر التمريضية العربية</span>
+                    <span data-i18n="footerNote">محتوى تدريبي مخصص لدعم الكوادر التمريضية العربية</span>
                 </p>
             </div>
         </div>
     </footer>
 
-    <!-- ==================== Application Logic (JavaScript) ==================== -->
+    <!-- ==================== Bilingual Application Logic (JavaScript) ==================== -->
     <script>
         // Set dynamic footer year
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
         /* =========================================================================
-           1. COUNTRY-SPECIFIC INTERVIEW QUESTIONS DATABASE (27 Comprehensive Q&As)
+           1. UI TRANSLATIONS DICTIONARY (AR / EN)
+           ========================================================================= */
+        const uiStrings = {
+            ar: {
+                pageTitle: 'انترفيو نيرس | Interview Nurse - دليلك الشامل لمقابلات التمريض',
+                langToggleText: 'EN',
+                brandTitle: 'انترفيو نيرس',
+                brandTag: 'Interview Nurse',
+                headerPreparedBy: 'إعداد وتصميم',
+                navCountries: 'اختيار الدولة',
+                navMockTest: 'الاختبار التجريبي',
+                heroBadge: 'منصتك المتخصصة للتحضير لمقابلات التمريض في الوطن العربي',
+                heroTitleStart: 'استعدي بثقة لاجتياز',
+                heroTitleHighlight: 'مقابلة عمل التمريض',
+                heroTitleEnd: 'بأعلى معايير الاحترافية',
+                heroSubtitle: 'اختاري الدولة العربية التي تستعدين للتقديم بها، وتعرفي على أهم الأسئلة المتوقعة وإجاباتها النموذجية وفق معايير الجودة والسلامة، ثم اختبري جاهزيتك بمواقف تمريضية واقعية.',
+                heroCtaCountries: 'استعراض أسئلة الدول',
+                heroCtaQuiz: 'ابدئي الاختبار التجريبي (10 مواقف)',
+                stat1Val: '3 دول',
+                stat1Lbl: 'السعودية، مصر، الإمارات',
+                stat2Val: '+27 سؤالاً',
+                stat2Lbl: 'بإجابات نموذجية ونصائح',
+                stat3Val: '10 مواقف',
+                stat3Lbl: 'اختبار تجريبي تفاعلي',
+                stepOneBadge: 'الخطوة الأولى',
+                countriesHeading: 'اختاري الدولة العربية لعرض أسئلة المقابلة',
+                countriesSubheading: 'تم تخصيص كل بنك أسئلة ليعكس بيئة العمل الفعلية ومعايير الاعتماد واللوائح المهنية في الدولة المختارة.',
+                qCountBadge: '9 أسئلة نموذجية',
+                saudiName: 'المملكة العربية السعودية',
+                saudiDesc: 'مقابلات وزارة الصحة والتجمعات الصحية والمستشفيات الخاصة، معايير الاعتماد سباهي (CBAHI)، هيئة التخصصات الصحية (SCFHS / ممارس بلس)، واختبار البرومترك.',
+                egyptName: 'جمهورية مصر العربية',
+                egyptDesc: 'مقابلات المستشفيات الكبرى والجامعية وهيئة الرعاية الصحية، معايير الجودة (GAHAR)، ترخيص نقابة التمريض، الفرز في الطوارئ ومكافحة العدوى.',
+                uaeName: 'الإمارات العربية المتحدة',
+                uaeDesc: 'مقابلات هيئات الترخيص (DHA / DOH / MOHAP)، معايير الاعتماد العالمية (JCI)، التواصل باللغة الإنجليزية الطبية، وبروتوكول (SBAR) في بيئة متعددة الثقافات.',
+                viewQuestionsCta: 'استعراض الأسئلة والإجابات',
+                tryMockTestBtn: 'جربي الاختبار التجريبي',
+                searchPlaceholder: 'ابحثي في الأسئلة أو المصطلحات (مثل: سباهي، GAHAR، JCI، الدواء، SBAR)...',
+                catAll: 'الكل',
+                catPersonal: 'شخصي ومهني',
+                catClinical: 'فني وتمريضي',
+                catQuality: 'معايير الجودة والتراخيص',
+                modelAnswerTitle: 'الإجابة النموذجية المقترحة:',
+                copyBtn: 'نسخ',
+                tipLabel: 'نصيحة المقابلة:',
+                noResultsTitle: 'لا توجد أسئلة مطابقة لبحثكِ',
+                noResultsSub: 'جربي البحث بكلمة أخرى أو اختاري تصنيف "الكل".',
+                countryQuestionsPrefix: 'أسئلة مقابلات التمريض في',
+                promoBadge: 'تقييم فوري + تبرير علمي ومهني',
+                promoTitle: 'هل أنتِ جاهزة لمواقف المقابلة العملية؟',
+                promoDesc: 'خوضي الاختبار التجريبي المكون من 10 مواقف تمريضية واقعية (أخطاء الدواء، Code Blue، وخز الإبر، الأوامر الشفهية، سرية المعلومات، وتحديد الأولويات) واكتشفي مستواكِ المهني فوراً.',
+                promoCta: 'ابدئي الاختبار التجريبي الآن',
+                quizHeaderTitle: 'الاختبار التجريبي للمواقف التمريضية',
+                quizHeaderSub: 'اختاري التصرف المهني الأدق لكل موقف إكلينيكي',
+                backToHome: 'العودة للرئيسية',
+                progressText: (cur, tot) => `الموقف ${cur} من ${tot}`,
+                scoreLive: (s) => `النقاط: ${s}`,
+                feedbackCorrect: 'إجابة صحيحة! أحسنتِ التصرف المهني.',
+                feedbackWrong: 'إجابة غير دقيقة — إليكِ آلية التعامل الصحيحة:',
+                nextScenario: 'الموقف التالي',
+                finishQuiz: 'عرض النتيجة النهائية',
+                resultCompleteTitle: 'اكتمل الاختبار التجريبي!',
+                resultFraction: (s, t) => `${s} من ${t} إجابات صحيحة`,
+                resultCorrectLbl: 'إجابات صحيحة',
+                resultWrongLbl: 'تحتاج مراجعة',
+                retakeQuizBtn: 'إعادة الاختبار التجريبي',
+                backToBankBtn: 'العودة لبنك الأسئلة',
+                evalHigh: 'أداء متميز جداً! لديكِ وعي سريري ومهني عالٍ يؤهلكِ لاجتياز مقابلات التمريض بثقة واقتدار.',
+                evalMid: 'مستوى جيد جداً! لديكِ أساس تمريضي قوي، ويُنصح بمراجعة المواقف التي أخطأتِ بها لتعزيز جاهزيتكِ الكاملة للمقابلة.',
+                evalLow: 'بداية جيدة للتدريب! ننصحكِ بمراجعة بنك الأسئلة النموذجية ومعايير سلامة المرضى ثم إعادة الاختبار لتحقيق نتيجة أعلى.',
+                footerBrand: 'انترفيو نيرس | Interview Nurse',
+                footerTagline: 'دليلك المهني الموثوق لمقابلات التمريض في الوطن العربي',
+                footerSignaturePrefix: 'الموقع من إعداد وتصميم',
+                footerRights: 'جميع الحقوق محفوظة',
+                footerBrandShort: 'انترفيو نيرس - Interview Nurse',
+                footerNote: 'محتوى تدريبي مخصص لدعم الكوادر التمريضية العربية',
+                toastCopied: 'تم نسخ الإجابة النموذجية بنجاح',
+                toastCopyErr: 'تعذر النسخ، يرجى التحديد والنسخ يدوياً',
+                toastLangSwitched: 'تم التبديل إلى اللغة العربية'
+            },
+            en: {
+                pageTitle: 'Interview Nurse | Nursing Job Interview Prep Platform',
+                langToggleText: 'عربي',
+                brandTitle: 'Interview Nurse',
+                brandTag: 'انترفيو نيرس',
+                headerPreparedBy: 'Prepared & Designed by',
+                navCountries: 'Select Country',
+                navMockTest: 'Mock Test',
+                heroBadge: 'Your Specialized Nursing Interview Preparation Platform in the Arab World',
+                heroTitleStart: 'Prepare Confidently to Ace Your',
+                heroTitleHighlight: 'Nursing Job Interview',
+                heroTitleEnd: 'with Clinical Excellence',
+                heroSubtitle: 'Choose your target Arab country to explore the most frequently asked nursing interview questions with model answers and accreditation tips, then test your clinical judgment with realistic workplace scenarios.',
+                heroCtaCountries: 'Explore Country Questions',
+                heroCtaQuiz: 'Start Mock Test (10 Scenarios)',
+                stat1Val: '3 Countries',
+                stat1Lbl: 'Saudi Arabia, Egypt, UAE',
+                stat2Val: '27+ Questions',
+                stat2Lbl: 'Model Answers & Pro Tips',
+                stat3Val: '10 Scenarios',
+                stat3Lbl: 'Interactive Situational Test',
+                stepOneBadge: 'Step One',
+                countriesHeading: 'Select a Country to View Interview Questions',
+                countriesSubheading: 'Each question bank is tailored to reflect real clinical environments, healthcare accreditation standards, and licensing regulations.',
+                qCountBadge: '9 Model Q&As',
+                saudiName: 'Saudi Arabia',
+                saudiDesc: 'MOH, Health Clusters & private hospital interviews, CBAHI accreditation standards, SCFHS / Mumaris Plus licensing, Prometric exam, and patient safety goals.',
+                egyptName: 'Egypt',
+                egyptDesc: 'Major private, university & Universal Health Insurance hospitals, GAHAR accreditation standards, Nursing Syndicate license, ER triage, and infection control.',
+                uaeName: 'United Arab Emirates',
+                uaeDesc: 'DHA / DOH (HAAD) / MOHAP licensing interviews, JCI international accreditation, medical English communication, SBAR handover, and multicultural patient care.',
+                viewQuestionsCta: 'View Questions & Answers',
+                tryMockTestBtn: 'Take Mock Test',
+                searchPlaceholder: 'Search questions or terms (e.g., CBAHI, GAHAR, JCI, SBAR, Medication)...',
+                catAll: 'All',
+                catPersonal: 'Personal & Professional',
+                catClinical: 'Clinical & Technical',
+                catQuality: 'Quality & Licensing',
+                modelAnswerTitle: 'Suggested Model Answer:',
+                copyBtn: 'Copy',
+                tipLabel: 'Pro Interview Tip:',
+                noResultsTitle: 'No matching questions found',
+                noResultsSub: 'Try searching with another keyword or select the "All" category.',
+                countryQuestionsPrefix: 'Nursing Interview Questions in',
+                promoBadge: 'Instant Feedback + Clinical Rationale',
+                promoTitle: 'Ready to Test Your Clinical Judgment?',
+                promoDesc: 'Take our interactive 10-scenario situational mock test covering medication safety, Code Blue, needle-stick injury, verbal orders, confidentiality, and ABC prioritization.',
+                promoCta: 'Start Mock Test Now',
+                quizHeaderTitle: 'Situational Nursing Mock Test',
+                quizHeaderSub: 'Choose the most accurate professional action for each clinical scenario',
+                backToHome: 'Back to Home',
+                progressText: (cur, tot) => `Scenario ${cur} of ${tot}`,
+                scoreLive: (s) => `Score: ${s}`,
+                feedbackCorrect: 'Correct Answer! Excellent clinical judgment.',
+                feedbackWrong: 'Not Quite Right — Here is the Recommended Nursing Action:',
+                nextScenario: 'Next Scenario',
+                finishQuiz: 'View Final Results',
+                resultCompleteTitle: 'Mock Test Completed!',
+                resultFraction: (s, t) => `${s} out of ${t} correct answers`,
+                resultCorrectLbl: 'Correct Answers',
+                resultWrongLbl: 'Needs Review',
+                retakeQuizBtn: 'Retake Mock Test',
+                backToBankBtn: 'Back to Question Bank',
+                evalHigh: 'Outstanding Performance! You demonstrate strong clinical judgment and patient safety awareness ready for nursing interviews.',
+                evalMid: 'Very Good Level! You have a solid nursing foundation. Review the scenarios you missed to reach peak interview readiness.',
+                evalLow: 'Good Practice Start! We recommend reviewing the model Q&A bank and patient safety standards, then retaking the test.',
+                footerBrand: 'Interview Nurse | انترفيو نيرس',
+                footerTagline: 'Your Trusted Professional Guide for Nursing Interviews in the Arab World',
+                footerSignaturePrefix: 'Prepared & Designed by',
+                footerRights: 'All Rights Reserved',
+                footerBrandShort: 'Interview Nurse',
+                footerNote: 'Training content dedicated to empowering nursing professionals',
+                toastCopied: 'Model answer copied to clipboard',
+                toastCopyErr: 'Unable to copy automatically; please copy manually',
+                toastLangSwitched: 'Switched to English'
+            }
+        };
+
+        /* =========================================================================
+           2. BILINGUAL COUNTRY-SPECIFIC INTERVIEW QUESTIONS DATABASE (27 Q&As)
            ========================================================================= */
         const countryData = {
             saudi: {
-                name: 'المملكة العربية السعودية',
-                badge: 'مقابلات السعودية • وزارة الصحة والقطاع الخاص',
-                subtitle: 'الأسئلة الأكثر تكراراً في التجمعات الصحية والمستشفيات السعودية وفق معايير SCFHS و CBAHI.',
+                name: { ar: 'المملكة العربية السعودية', en: 'Saudi Arabia' },
+                badge: {
+                    ar: 'مقابلات السعودية • وزارة الصحة والقطاع الخاص',
+                    en: 'Saudi Arabia • MOH & Private Hospitals'
+                },
+                subtitle: {
+                    ar: 'الأسئلة الأكثر تكراراً في التجمعات الصحية والمستشفيات السعودية وفق معايير SCFHS و CBAHI.',
+                    en: 'Top interview questions in Saudi Health Clusters and hospitals aligned with SCFHS, Mumaris Plus, and CBAHI standards.'
+                },
                 questions: [
                     {
                         category: 'personal',
-                        q: 'عرفي عن نفسكِ، وما الذي يدفعكِ للعمل في القطاع الصحي بالمملكة العربية السعودية؟',
-                        a: 'أنا ممرضة مسجلة حاصلة على بكالوريوس التمريض ولدي خبرة عملية في (اذكري القسم مثل الباطنة/الطوارئ/العناية). أتمتع بمهارات عالية في الرعاية التمريضية المبنية على البراهين والعمل ضمن فريق متعدد التخصصات. يسعدني الانضمام للقطاع الصحي السعودي لما يشهده من تطور نوعي متسارع ضمن رؤية 2030، ولتطبيق أعلى معايير الجودة مثل سباهي (CBAHI)، مما يمنحني بيئة مهنية محفزة لتقديم رعاية آمنة للمرضى.',
-                        tip: 'اربطي إجابتكِ بمهاراتكِ الإكلينيكية ورؤية التطوير الصحي في المملكة وتجنبي الحديث عن الراتب كسبب وحيد.'
+                        q: {
+                            ar: 'عرفي عن نفسكِ، وما الذي يدفعكِ للعمل في القطاع الصحي بالمملكة العربية السعودية؟',
+                            en: 'Tell us about yourself, and what motivates you to work in Saudi Arabia’s healthcare sector?'
+                        },
+                        a: {
+                            ar: 'أنا ممرضة مسجلة حاصلة على بكالوريوس التمريض ولدي خبرة عملية في (اذكري القسم مثل الباطنة/الطوارئ/العناية). أتمتع بمهارات عالية في الرعاية التمريضية المبنية على البراهين والعمل ضمن فريق متعدد التخصصات. يسعدني الانضمام للقطاع الصحي السعودي لما يشهده من تطور نوعي متسارع ضمن رؤية 2030، ولتطبيق أعلى معايير الجودة مثل سباهي (CBAHI)، مما يمنحني بيئة مهنية محفزة لتقديم رعاية آمنة للمرضى.',
+                            en: 'I am a Registered Nurse holding a BSN with hands-on clinical experience in (mention unit, e.g., Med-Surg/ER/ICU). I specialize in evidence-based patient care and multidisciplinary teamwork. I am eager to join Saudi Arabia’s healthcare sector because of its rapid transformation under Vision 2030 and its strong commitment to CBAHI quality standards, offering an ideal environment to deliver safe, high-quality care.'
+                        },
+                        tip: {
+                            ar: 'اربطي إجابتكِ بمهاراتكِ الإكلينيكية ورؤية التطوير الصحي في المملكة وتجنبي الحديث عن الراتب كسبب وحيد.',
+                            en: 'Connect your clinical strengths with Saudi Vision 2030 healthcare goals and avoid mentioning salary as your primary motive.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'ما هي معايير سباهي (CBAHI)، وما هو دور الممرضة اليومي في تطبيقها؟',
-                        a: 'سباهي (المركز السعودي لاعتماد المنشآت الصحية) هو الجهة الوطنية المسؤولة عن وضع معايير الجودة وسلامة المرضى في المملكة. يتركز دور الممرضة اليومي في الالتزام بأهداف سلامة المرضى (ESR)، والتعريف الثنائي للمريض، ومكافحة العدوى وغسل اليدين، والتوثيق الدقيق في الملف الطبي، وحفظ الأدوية عالية الخطورة (High Alert Medications) وفق السياسات المعتمدة، والتبليغ الفوري عن أي حادث عرضي عبر نظام (OVR).',
-                        tip: 'ذِكر مصطلح (ESR - المتطلبات الأساسية للسلامة) يعطي انطباعاً قوياً بأنكِ ملمة ببيئة العمل السعودية.'
+                        q: {
+                            ar: 'ما هي معايير سباهي (CBAHI)، وما هو دور الممرضة اليومي في تطبيقها؟',
+                            en: 'What are CBAHI standards, and what is the nurse’s daily role in maintaining them?'
+                        },
+                        a: {
+                            ar: 'سباهي (المركز السعودي لاعتماد المنشآت الصحية) هو الجهة الوطنية المسؤولة عن وضع معايير الجودة وسلامة المرضى في المملكة. يتركز دور الممرضة اليومي في الالتزام بمتطلبات السلامة الأساسية (ESR)، والتعريف الثنائي للمريض، ومكافحة العدوى وغسل اليدين، والتوثيق الدقيق في الملف الطبي، وحفظ الأدوية عالية الخطورة (High Alert Medications) وفق السياسات المعتمدة، والتبليغ الفوري عن أي حادث عرضي عبر نظام (OVR).',
+                            en: 'CBAHI (Saudi Central Board for Accreditation of Healthcare Institutions) sets the national healthcare quality and patient safety standards in Saudi Arabia. A nurse’s daily role includes adhering to Essential Safety Requirements (ESRs), dual patient identification, strict hand hygiene and infection control, accurate EHR documentation, independent double-checking of High-Alert Medications, and promptly reporting incidents via the OVR system.'
+                        },
+                        tip: {
+                            ar: 'ذِكر مصطلح (ESR - المتطلبات الأساسية للسلامة) يعطي انطباعاً قوياً بأنكِ ملمة ببيئة العمل السعودية.',
+                            en: 'Mentioning ESRs (Essential Safety Requirements) signals deep familiarity with Saudi hospital accreditation audits.'
+                        }
+                    },
+                    {
+                        category: 'quality',
+                        q: {
+                            ar: 'هل لديكِ تصنيف وتسجيل مهني سارٍ في الهيئة السعودية للتخصصات الصحية (SCFHS / ممارس بلس) وبطاقة BLS؟',
+                            en: 'Do you hold an active SCFHS classification/registration (Mumaris Plus) and a valid BLS certificate?'
+                        },
+                        a: {
+                            ar: 'نعم، أحمل تصنيفاً وتسجيلاً مهنياً سارياً عبر منصة ممارس بلس (Mumaris Plus) بعد اجتياز اختبار البرومترك واستيفاء ساعات التعليم الطبي المستمر (CME)، كما أحمل شهادة الإنعاش القلبي الرئوي الأساسي (BLS) سارية المفعول من جمعية القلب السعودية أو الأمريكية، وأحرص دائماً على تجديدها قبل موعد الانتهاء.',
+                            en: 'Yes, I hold an active SCFHS professional classification and registration via Mumaris Plus after passing the Prometric exam and completing required CME hours. I also maintain a valid BLS certification from the Saudi or American Heart Association and ensure timely renewal before expiration.'
+                        },
+                        tip: {
+                            ar: 'تأكدي من معرفة تاريخ انتهاء بطاقة الهيئة والـ BLS وعدد ساعات التعليم الطبي المطلوبة لتجديد التصنيف.',
+                            en: 'Know your exact SCFHS and BLS expiration dates as well as the CME hours needed for renewal.'
+                        }
+                    },
+                    {
+                        category: 'quality',
+                        q: {
+                            ar: 'ما هي أهداف سلامة المرضى الدولية (IPSG) الستة وكيف تطبقينها في عملك؟',
+                            en: 'What are the six International Patient Safety Goals (IPSG) and how do you apply them?'
+                        },
+                        a: {
+                            ar: '1) التعرف الصحيح على المريض باستخدام معرفين (الاسم الرباعي ورقم الملف الطبي).\n2) تحسين التواصل الفعال (استخدام SBAR وقراءة الأوامر الشفهية Read-Back).\n3) تحسين سلامة الأدوية عالية الخطورة (الفحص المزدوج Independent Double Check).\n4) ضمان الجراحة الآمنة (الوقت المستقطع Time-Out).\n5) تقليل خطر العدوى المرتبطة بالرعاية الصحية (اللحظات الخمس لغسل اليدين).\n6) تقليل خطر سقوط المرضى (تقييم مقياس Morse ورفع حواجز السرير).',
+                            en: '1) Identify patients correctly using two identifiers (Full name & MRN).\n2) Improve effective communication (SBAR & Read-Back for critical/verbal orders).\n3) Improve safety of High-Alert Medications (Independent Double Check).\n4) Ensure safe surgery (Time-Out & site marking).\n5) Reduce healthcare-associated infections (WHO 5 Moments for Hand Hygiene).\n6) Reduce patient harm from falls (Morse Fall Scale & bed safety measures).'
+                        },
+                        tip: {
+                            ar: 'احفظيها بالترتيب وكوني مستعدة لإعطاء مثال عملي واحد على الأقل لكل هدف.',
+                            en: 'Memorize all six in order and be ready to give one practical bedside example for each.'
+                        }
+                    },
+                    {
+                        category: 'clinical',
+                        q: {
+                            ar: 'كيف تتعاملين مع ضغط العمل المرتفع، خاصة خلال المواسم مثل رمضان أو موسم الحج؟',
+                            en: 'How do you manage high workloads and stress, especially during peak seasons like Ramadan or Hajj?'
+                        },
+                        a: {
+                            ar: 'أعتمد على التخطيط المسبق وتحديد الأولويات الطبية وفق قاعدة (ABCs - مجرى الهواء، التنفس، الدورة الدموية) والحالات الأكثر خطورة أولاً. أحافظ على هدوئي وتنظيمي للوقت، وأتواصل بشفافية مع مشرفة القسم والزميلات لتوزيع المهام بعدالة ودعم الفريق، مع عدم التنازل أبداً عن إجراءات سلامة المريض مهما زاد ضغط العمل.',
+                            en: 'I rely on structured time management and clinical prioritization using the ABCs framework (Airway, Breathing, Circulation) to address life-threatening needs first. I remain calm, communicate transparently with the charge nurse and colleagues to delegate safely and support team flow, and never compromise patient safety protocols regardless of workload.'
+                        },
+                        tip: {
+                            ar: 'اللجنة تبحث عن الممرضة الهادئة التي تجيد إدارة الأولويات دون ارتكاب أخطاء طبية تحت الضغط.',
+                            en: 'Interviewers look for composure, structured prioritization, and zero shortcuts on patient safety.'
+                        }
                     },
                     {
                         category: 'personal',
-                        q: 'هل لديكِ تصنيف وتسجيل مهني سارٍ في الهيئة السعودية للتخصصات الصحية (SCFHS) وبطاقة BLS؟',
-                        a: 'نعم، أحمل تصنيفاً مهنياً سارياً بمسمى (أخصائية تمريض / فنية تمريض) بعد اجتياز اختبار البرومترك واستيفاء ساعات التعليم الطبي المستمر (CME)، كما أحمل شهادة الإنعاش القلبي الرئوي الأساسي (BLS) سارية المفعول من جمعية القلب السعودية أو الأمريكية، وأحرص دائماً على تجديدها قبل موعد الانتهاء.',
-                        tip: 'تأكدي من معرفة تاريخ انتهاء بطاقة الهيئة والـ BLS وعدد ساعات التعليم الطبي المطلوبة لتجديد التصنيف.'
+                        q: {
+                            ar: 'كيف تراعين الخصوصية والثقافة المجتمعية للمرضى في المملكة أثناء تقديم الرعاية؟',
+                            en: 'How do you uphold patient privacy and cultural sensitivity in Saudi healthcare settings?'
+                        },
+                        a: {
+                            ar: 'أحترم خصوصية المريض الدينية والثقافية بشكل كامل عبر الاستئذان قبل الدخول، وإغلاق الستائر والأبواب عند الفحص، وتغطية جسم المريض وكشف الجزء اللازم للإجراء فقط، ومراعاة وجود ممرضة للمريضات الإناث قدر الإمكان، والتحدث بلباقة واحترام مع المريض وكبار السن وأفراد الأسرة.',
+                            en: 'I fully respect cultural and religious values by knocking before entering, closing curtains and doors during assessments, draping patients appropriately to expose only the necessary area, respecting gender-concordant care preferences whenever possible, and communicating respectfully with elderly patients and their families.'
+                        },
+                        tip: {
+                            ar: 'احترام الخصوصية وحقوق المريض من أهم محاور تقييم رضا المرضى (Press Ganey) في مستشفيات المملكة.',
+                            en: 'Cultural respect and privacy directly impact Press Ganey patient satisfaction scores in Saudi hospitals.'
+                        }
+                    },
+                    {
+                        category: 'clinical',
+                        q: {
+                            ar: 'ما هي القاعدة الذهبية في التوثيق التمريضي داخل الملف الطبي الإلكتروني؟',
+                            en: 'What is the golden rule of nursing documentation in the Electronic Health Record (EHR)?'
+                        },
+                        a: {
+                            ar: 'القاعدة الذهبية هي: "ما لم يُوثّق، لم يُعمل" (If it is not documented, it is not done). يجب أن يكون التوثيق فورياً، دقيقاً، موضوعياً (حقائق وملاحظات لا آراء)، كاملاً، ومنسوباً للممرضة التي قامت بالإجراء فقط دون استخدام حساب أي زميل آخر، مع توثيق استجابة المريض بعد كل تدخل تمريضي.',
+                            en: 'The golden rule is: "If it is not documented, it is not done." Documentation must be timely, accurate, objective (facts rather than assumptions), complete, and entered strictly under your own login credentials—never sharing passwords—while clearly recording the patient’s response to every nursing intervention.'
+                        },
+                        tip: {
+                            ar: 'أشيري إلى أهمية عدم مشاركة كلمة مرور الملف الإلكتروني (EHR) لأنها مخالفة قانونية وأمنية.',
+                            en: 'Highlighting EHR password confidentiality shows strong legal and informatics awareness.'
+                        }
+                    },
+                    {
+                        category: 'clinical',
+                        q: {
+                            ar: 'كيف تتصرفين عند اكتشاف مريض يعاني من هبوط حاد في سكر الدم (Hypoglycemia)؟',
+                            en: 'How do you manage a patient presenting with acute hypoglycemia?'
+                        },
+                        a: {
+                            ar: 'أقوم فوراً بتقييم مستوى الوعي وقياس سكر الدم. إذا كان المريض واعياً وقادراً على البلع، أطبق قاعدة (15-15): إعطاؤه 15 جراماً من الكربوهيدرات سريعة الامتصاص ثم إعادة القياس بعد 15 دقيقة. أما إذا كان فاقداً للوعي أو غير قادر على البلع، أبلغ الطبيب فوراً وأجهز لإعطاء الجلوكوز الوريدي (D50% أو D10% حسب البروتوكول) أو الجلوكاجون العضلي، مع مراقبة العلامات الحيوية والتوثيق.',
+                            en: 'I immediately assess the patient’s level of consciousness and check blood glucose. If conscious and able to swallow, I apply the 15-15 rule: give 15g of fast-acting carbohydrates and recheck glucose in 15 minutes. If unconscious or unable to swallow safely, I notify the physician immediately and prepare IV Dextrose (D50% or D10% per protocol) or IM Glucagon while monitoring vital signs and documenting everything.'
+                        },
+                        tip: {
+                            ar: 'التفريق بين المريض الواعي وفاقد الوعي هو النقطة الحاسمة التي ينتظرها المقيم.',
+                            en: 'Clearly distinguishing between conscious (oral 15-15 rule) and unconscious (IV/IM) management is key.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'ما هي أهداف سلامة المرضى الدولية (IPSG) الستة وكيف تطبقينها في عملك؟',
-                        a: '1) التعرف الصحيح على المريض باستخدام معرفين (الاسم الرباعي ورقم الملف الطبي).\n2) تحسين التواصل الفعال (استخدام SBAR وقراءة الأوامر الشفهية Read-Back).\n3) تحسين سلامة الأدوية عالية الخطورة (الفحص المزدوج Independent Double Check).\n4) ضمان الجراحة الآمنة (الوقت المستقطع Time-Out).\n5) تقليل خطر العدوى المرتبطة بالرعاية الصحية (اللحظات الخمس لغسل اليدين).\n6) تقليل خطر سقوط المرضى (تقييم مقياس Morse ورفع حواجز السرير).',
-                        tip: 'احفظيها بالترتيب وكوني مستعدة لإعطاء مثال عملي واحد على الأقل لكل هدف.'
-                    },
-                    {
-                        category: 'clinical',
-                        q: 'كيف تتعاملين مع ضغط العمل المرتفع، خاصة خلال المواسم مثل رمضان أو موسم الحج؟',
-                        a: 'أعتمد على التخطيط المسبق وتحديد الأولويات الطبية وفق قاعدة (ABCs - مجرى الهواء، التنفس، الدورة الدموية) والحالات الأكثر خطورة أولاً. أحافظ على هدوئي وتنظيمي للوقت، وأتواصل بشفافية مع مشرفة القسم والزميلات لتوزيع المهام بعدالة ودعم الفريق، مع عدم التنازل أبداً عن إجراءات سلامة المريض مهما زاد ضغط العمل.',
-                        tip: 'اللجنة تبحث عن الممرضة الهادئة التي تجيد إدارة الأولويات دون ارتكاب أخطاء طبية تحت الضغط.'
-                    },
-                    {
-                        category: 'personal',
-                        q: 'كيف تراعين الخصوصية والثقافة المجتمعية للمرضى في المملكة أثناء تقديم الرعاية؟',
-                        a: 'أحترم خصوصية المريض الدينية والثقافية بشكل كامل عبر الاستئذان قبل الدخول، وإغلاق الستائر والأبواب عند الفحص، وتغطية جسم المريض وكشف الجزء اللازم للإجراء فقط، ومراعاة وجود ممرضة للمريضات الإناث قدر الإمكان، والتحدث بلباقة واحترام مع المريض وكبار السن وأفراد الأسرة.',
-                        tip: 'احترام الخصوصية وحقوق المريض من أهم محاور تقييم رضا المرضى (Press Ganey) في مستشفيات المملكة.'
-                    },
-                    {
-                        category: 'clinical',
-                        q: 'ما هي القاعدة الذهبية في التوثيق التمريضي داخل الملف الطبي الإلكتروني؟',
-                        a: 'القاعدة الذهبية هي: "ما لم يُوثّق، لم يُعمل" (If it is not documented, it is not done). يجب أن يكون التوثيق فورياً، دقيقاً، موضوعياً (حقائق وملاحظات لا آراء)، كاملاً، ومنسوباً للممرضة التي قامت بالإجراء فقط دون استخدام حساب أي زميل آخر، مع توثيق استجابة المريض بعد كل تدخل تمريضي.',
-                        tip: 'أشيري إلى أهمية عدم مشاركة كلمة مرور الملف الإلكتروني (EHR) لأنها مخالفة قانونية وأمنية.'
-                    },
-                    {
-                        category: 'clinical',
-                        q: 'كيف تتصرفين عند اكتشاف مريض يعاني من هبوط حاد في سكر الدم (Hypoglycemia)؟',
-                        a: 'أقوم فوراً بتقييم مستوى الوعي وقياس سكر الدم. إذا كان المريض واعياً وقادراً على البلع، أطبق قاعدة (15-15): إعطاؤه 15 جراماً من الكربوهيدرات سريعة الامتصاص ثم إعادة القياس بعد 15 دقيقة. أما إذا كان فاقداً للوعي أو غير قادر على البلع، أبلغ الطبيب فوراً وأجهز لإعطاء الجلوكوز الوريدي (D50% أو D10% حسب البروتوكول) أو الجلوكاجون العضلي، مع مراقبة العلامات الحيوية والتوثيق.',
-                        tip: 'التفريق بين المريض الواعي وفاقد الوعي هو النقطة الحاسمة التي ينتظرها المقيم.'
-                    },
-                    {
-                        category: 'quality',
-                        q: 'ما هو نظام الإبلاغ عن الحوادث العرضية (OVR / Incident Report) وما الهدف منه؟',
-                        a: 'هو نظام سري غير عقابي للإبلاغ عن أي حدث غير متوقع أو خطأ وشيك (Near Miss) قد يؤثر على سلامة المريض أو الموظف (مثل سقوط مريض أو خطأ دوائي). الهدف منه ليس معاقبة الموظف، بل تحليل السبب الجذري (Root Cause Analysis) وتطوير النظام لمنع تكرار الخطأ مستقبلاً، ولا يُكتب داخل الملف الطبي للمريض.',
-                        tip: 'اذكري عبارة "نظام غير عقابي يهدف للتعلم والتحسين ولا يُشار إليه في ملاحظات ملف المريض".'
+                        q: {
+                            ar: 'ما هو نظام الإبلاغ عن الحوادث العرضية (OVR / Incident Report) وما الهدف منه؟',
+                            en: 'What is the Occurrence Variance Report (OVR) system and what is its purpose?'
+                        },
+                        a: {
+                            ar: 'هو نظام سري غير عقابي للإبلاغ عن أي حدث غير متوقع أو خطأ وشيك (Near Miss) قد يؤثر على سلامة المريض أو الموظف (مثل سقوط مريض أو خطأ دوائي). الهدف منه ليس معاقبة الموظف، بل تحليل السبب الجذري (Root Cause Analysis) وتطوير النظام لمنع تكرار الخطأ مستقبلاً، ولا يُكتب داخل الملف الطبي للمريض.',
+                            en: 'OVR is a confidential, non-punitive reporting system for unexpected events, errors, or near misses affecting patient or staff safety (such as falls or medication errors). Its goal is Root Cause Analysis and system improvement to prevent recurrence—not blaming staff—and it is never referenced inside the patient’s medical chart.'
+                        },
+                        tip: {
+                            ar: 'اذكري عبارة "نظام غير عقابي يهدف للتعلم والتحسين ولا يُشار إليه في ملاحظات ملف المريض".',
+                            en: 'Always mention "non-punitive Just Culture" and that OVR is never documented in the patient’s medical record.'
+                        }
                     }
                 ]
             },
             egypt: {
-                name: 'جمهورية مصر العربية',
-                badge: 'مقابلات مصر • المستشفيات الكبرى والمراكز التخصصية',
-                subtitle: 'أهم الأسئلة المتوقعة في المستشفيات الخاصة والجامعية ومنظومة التأمين الصحي الشامل ومعايير GAHAR.',
+                name: { ar: 'جمهورية مصر العربية', en: 'Egypt' },
+                badge: {
+                    ar: 'مقابلات مصر • المستشفيات الكبرى والمراكز التخصصية',
+                    en: 'Egypt • Major Private, University & UHI Hospitals'
+                },
+                subtitle: {
+                    ar: 'أهم الأسئلة المتوقعة في المستشفيات الخاصة والجامعية ومنظومة التأمين الصحي الشامل ومعايير GAHAR.',
+                    en: 'Key interview questions in top Egyptian hospitals, Universal Health Insurance facilities, and GAHAR accreditation standards.'
+                },
                 questions: [
                     {
                         category: 'personal',
-                        q: 'لماذا اخترتِ التقدم للعمل في مستشفانا، وما الذي يميزكِ عن باقي المتقدمات؟',
-                        a: 'اخترت مستشفاكم لسمعته الطبية المتميزة والتزامه بتطبيق معايير الجودة والتدريب المستمر للتمريض. ما يميزني هو الجمع بين المهارة الإكلينيكية القوية وسرعة البديهة في التعامل مع الحالات الحرجة، بالإضافة إلى قدرتي على التواصل الإنساني الهادئ مع المرضى وذويهم، والتزامي الكامل بأخلاقيات المهنة والعمل الجماعي.',
-                        tip: 'ابحثي قبل المقابلة عن تخصصات المستشفى واعتماداته لتظهري اهتماماً حقيقياً بالمكان.'
+                        q: {
+                            ar: 'لماذا اخترتِ التقدم للعمل في مستشفانا، وما الذي يميزكِ عن باقي المتقدمات؟',
+                            en: 'Why did you apply to our hospital, and what sets you apart from other nursing candidates?'
+                        },
+                        a: {
+                            ar: 'اخترت مستشفاكم لسمعته الطبية المتميزة والتزامه بتطبيق معايير الجودة والتدريب المستمر للتمريض. ما يميزني هو الجمع بين المهارة الإكلينيكية القوية وسرعة البديهة في التعامل مع الحالات الحرجة، بالإضافة إلى قدرتي على التواصل الإنساني الهادئ مع المرضى وذويهم، والتزامي الكامل بأخلاقيات المهنة والعمل الجماعي.',
+                            en: 'I chose your hospital for its clinical reputation, commitment to quality standards, and continuous nursing education. What distinguishes me is combining strong bedside clinical skills and quick critical thinking with compassionate communication, strict professional ethics, and collaborative teamwork.'
+                        },
+                        tip: {
+                            ar: 'ابحثي قبل المقابلة عن تخصصات المستشفى واعتماداته لتظهري اهتماماً حقيقياً بالمكان.',
+                            en: 'Research the hospital’s specialties and accreditations beforehand to tailor your answer authentically.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'ما هي معايير هيئة الاعتماد والرقابة الصحية المصرية (GAHAR)؟',
-                        a: 'معايير GAHAR هي المعايير الوطنية المعتمدة دولياً من (ISQua) لضمان جودة الخدمات الصحية وسلامة المرضى في مصر ضمن منظومة التأمين الصحي الشامل. وتشمل متطلبات السلامة الوطنية (NSRs) مثل التعرف الصحيح على المريض، سلامة الدواء، مكافحة العدوى، منع قرح الفراش والسقوط، والتوثيق التمريضي الكامل.',
-                        tip: 'إلمامكِ بمصطلح GAHAR و NSRs يمنحكِ أفضلية كبيرة في المستشفيات الكبرى والحديثة بمصر.'
-                    },
-                    {
-                        category: 'clinical',
-                        q: 'كيف تتعاملين مع الأعداد الكبيرة في قسم الطوارئ وتطبقين نظام الفرز (Triage)؟',
-                        a: 'أعتمد على نظام الفرز المصنف بالألوان (مثل ESI أو CTAS) لترتيب الأولويات حسب خطورة الحالة وليس بأسبقية الحضور: الأحمر للحالات المهددة للحياة الفورية (توقف قلب، صدمة، نزيف حاد)، البرتقالي للحالات الطارئة جداً، الأصفر للحالات العاجلة المستقرة، والأخضر للحالات البسيطة. مع طمأنة المرضى المنتظرين بلباقة وشرح أولوية الحالات الحرجة.',
-                        tip: 'أوضحي أن الفرز يبدأ بتقييم سريع لـ ABCs والعلامات الحيوية خلال دقائق معدودة.'
-                    },
-                    {
-                        category: 'clinical',
-                        q: 'اذكري القواعد الصحيحة لإعطاء الدواء بأمان (Rights of Medication Administration).',
-                        a: 'ألتزم بالقواعد العشر لإعطاء الدواء: المريض الصحيح (بمعرفين)، الدواء الصحيح، الجرعة الصحيحة، الطريقة الصحيحة (Route)، الوقت الصحيح، التوثيق الصحيح، التثقيف الصحيح للمريض، حق المريض في الرفض، التقييم قبل الإعطاء (مثل الضغط قبل خافض الضغط)، وتقييم الاستجابة والآثار الجانبية بعد الإعطاء.',
-                        tip: 'ذكر القواعد العشر بدلاً من الخمس فقط يُظهر مستوى عالياً من الوعي التمريضي.'
+                        q: {
+                            ar: 'ما هي معايير هيئة الاعتماد والرقابة الصحية المصرية (GAHAR) ومتطلبات السلامة الوطنية؟',
+                            en: 'What are GAHAR accreditation standards and Egypt’s National Safety Requirements (NSRs)?'
+                        },
+                        a: {
+                            ar: 'معايير GAHAR هي المعايير الوطنية المعتمدة دولياً من (ISQua) لضمان جودة الخدمات الصحية وسلامة المرضى في مصر ضمن منظومة التأمين الصحي الشامل. وتشمل متطلبات السلامة الوطنية (NSRs) مثل التعرف الصحيح على المريض، سلامة الدواء، مكافحة العدوى، منع قرح الفراش والسقوط، والتوثيق التمريضي الكامل.',
+                            en: 'GAHAR (General Authority for Healthcare Accreditation and Regulation) sets Egypt’s ISQua-accredited national standards under the Universal Health Insurance system. They emphasize National Safety Requirements (NSRs), including accurate patient identification, medication safety, infection control, fall and pressure injury prevention, and comprehensive nursing documentation.'
+                        },
+                        tip: {
+                            ar: 'إلمامكِ بمصطلح GAHAR و NSRs يمنحكِ أفضلية كبيرة في المستشفيات الكبرى والحديثة بمصر.',
+                            en: 'Knowing GAHAR and NSRs gives you a major competitive edge across modern Egyptian hospitals.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'ما هي الإجراءات الأساسية لمكافحة العدوى (Infection Control) في القسم؟',
-                        a: 'تبدأ بالالتزام الصارم باللحظات الخمس لغسل اليدين (قبل ملامسة المريض، قبل الإجراء المعقم، بعد التعرض لسوائل الجسم، بعد ملامسة المريض، وبعد ملامسة محيطه)، واستخدام معدات الوقاية الشخصية (PPE) المناسبة لكل نوع عزل (تلامسي، رذاذي، هوائي)، والتخلص الآمن من النفايات الطبية الحادة في الـ Safety Box عند امتلائه لثلاثة أرباعه فقط، وعدم إعادة تغطية الإبر (No Recapping).',
-                        tip: 'نقطة "عدم إعادة تغطية الإبر" و"امتلاء صندوق الحواد حتى 3/4" من أكثر الأسئلة شيوعاً.'
-                    },
-                    {
-                        category: 'personal',
-                        q: 'كيف تتعاملين مع أهل المريض المنفعلين أو كثيري الأسئلة في المستشفى؟',
-                        a: 'أتفهم تماماً أن انفعال الأهل نابع من خوفهم وقلقهم على مريضهم. أستمع لهم باهتمام دون مقاطعة، وأحافظ على نبرة صوت هادئة ولغة جسد متعاطفة، وأقدم لهم المعلومات المصرح لي بها بوضوح، وإذا كان استفسارهم يتعلق بالتشخيص أو الخطة العلاجية أوجههم بلباقة للطبيب المعالج، مع الاستعانة بمشرفة القسم أو الأمن عند أي تجاوز لفظي أو تهديد.',
-                        tip: 'التعاطف + الهدوء + احترام حدود الصلاحيات المهنية هي المعادلة الذهبية هنا.'
-                    },
-                    {
-                        category: 'clinical',
-                        q: 'كيف تتصرفين إذا ظهرت علامات تفاعل تحسسي أثناء نقل الدم (Blood Transfusion Reaction)؟',
-                        a: '1) أوقف نقل الدم فوراً.\n2) أحافظ على الوريد مفتوحاً باستخدام محلول ملحي عادي (Normal Saline) بوصلة وريدية جديدة تماماً.\n3) أقيس العلامات الحيوية وأقيم حالة المريض التنفسية فوراً.\n4) أبلغ الطبيب وبنك الدم فوراً.\n5) أعيد فحص بيانات كيس الدم وبيانات المريض، وأرسل الكيس والوصلة مع عينات الدم والبول المطلوبة لبنك الدم، ثم أوثق كل الإجراءات بدقة.',
-                        tip: 'تذكري دائماً: إيقاف الدم أولاً ثم تغيير الوصلة بمحلول ملحي، ولا يُدفع الدم المتبقي في الوصلة أبداً.'
+                        q: {
+                            ar: 'هل لديكِ ترخيص مزاولة مهنة التمريض وكارنيه النقابة ساريين؟',
+                            en: 'Do you hold an active Ministry of Health nursing practice license and Nursing Syndicate card?'
+                        },
+                        a: {
+                            ar: 'نعم، لدي ترخيص مزاولة مهنة التمريض صادر من وزارة الصحة المصرية وكارنيه نقابة التمريض سارٍ، بالإضافة إلى شهادة التخرج والامتياز (أو التكليف)، وأحرص على تحديث ملفاتي المهنية وحضور الدورات المعتمدة بانتظام.',
+                            en: 'Yes, I hold an active nursing practice license issued by the Egyptian Ministry of Health, a valid Nursing Syndicate membership card, and my internship completion certificate. I keep all credentials updated and regularly attend clinical workshops.'
+                        },
+                        tip: {
+                            ar: 'أحضري نسخاً منظمة من أوراقكِ الرسمية وترخيص المزاولة معكِ يوم المقابلة.',
+                            en: 'Bring a neat folder with copies of your license, Syndicate ID, and training certificates to the interview.'
+                        }
                     },
                     {
                         category: 'clinical',
-                        q: 'ما هي خطواتكِ الوقائية لحماية مريض طريح الفراش من قرح الفراش (Pressure Ulcers)؟',
-                        a: 'تقييم الخطورة بمقياس برادن (Braden Scale) عند الدخول، وتقليب المريض كل ساعتين بانتظام، واستخدام مرتبة هوائية طبية، والحفاظ على جفاف ونظافة الجلد وترطيبه، والتأكد من خلو الملاءات من التجاعيد، ومتابعة التغذية الجيدة الغنية بالبروتين والسوائل بالتعاون مع أخصائي التغذية.',
-                        tip: 'ذِكر مقياس Braden والتقليب كل ساعتين يعكس ممارسة علمية دقيقة.'
+                        q: {
+                            ar: 'كيف تتعاملين مع الأعداد الكبيرة في قسم الطوارئ وتطبقين نظام الفرز (Triage)؟',
+                            en: 'How do you manage high patient volumes in the ER and apply the Triage system?'
+                        },
+                        a: {
+                            ar: 'أعتمد على نظام الفرز المصنف بالألوان (مثل ESI أو CTAS) لترتيب الأولويات حسب خطورة الحالة وليس بأسبقية الحضور: الأحمر للحالات المهددة للحياة الفورية (توقف قلب، صدمة، نزيف حاد)، البرتقالي للحالات الطارئة جداً، الأصفر للحالات العاجلة المستقرة، والأخضر للحالات البسيطة. مع طمأنة المرضى المنتظرين بلباقة وشرح أولوية الحالات الحرجة.',
+                            en: 'I apply standardized triage classification (such as ESI or CTAS) to prioritize patients by clinical acuity rather than arrival time: Red for immediate life-threatening emergencies, Orange for emergent cases, Yellow for urgent stable cases, and Green for minor conditions—while calmly reassuring waiting patients.'
+                        },
+                        tip: {
+                            ar: 'أوضحي أن الفرز يبدأ بتقييم سريع لـ ABCs والعلامات الحيوية خلال دقائق معدودة.',
+                            en: 'Emphasize rapid ABC assessment and vital signs within the first few minutes of patient arrival.'
+                        }
+                    },
+                    {
+                        category: 'clinical',
+                        q: {
+                            ar: 'اذكري القواعد الصحيحة لإعطاء الدواء بأمان (Rights of Medication Administration).',
+                            en: 'What are the Rights of Safe Medication Administration?'
+                        },
+                        a: {
+                            ar: 'ألتزم بالقواعد العشر لإعطاء الدواء: المريض الصحيح (بمعرفين)، الدواء الصحيح، الجرعة الصحيحة، الطريقة الصحيحة (Route)، الوقت الصحيح، التوثيق الصحيح، التثقيف الصحيح للمريض، حق المريض في الرفض، التقييم قبل الإعطاء (مثل الضغط قبل خافض الضغط)، وتقييم الاستجابة والآثار الجانبية بعد الإعطاء.',
+                            en: 'I strictly follow the 10 Rights of Medication Administration: Right Patient (two identifiers), Right Drug, Right Dose, Right Route, Right Time, Right Documentation, Right Patient Education, Right to Refuse, Right Pre-Assessment (e.g., BP before antihypertensives), and Right Evaluation of response and side effects.'
+                        },
+                        tip: {
+                            ar: 'ذكر القواعد العشر بدلاً من الخمس فقط يُظهر مستوى عالياً من الوعي التمريضي.',
+                            en: 'Reciting the 10 Rights instead of only 5 demonstrates advanced clinical safety standards.'
+                        }
+                    },
+                    {
+                        category: 'quality',
+                        q: {
+                            ar: 'ما هي الإجراءات الأساسية لمكافحة العدوى (Infection Control) في القسم؟',
+                            en: 'What are the core Infection Prevention and Control practices on your unit?'
+                        },
+                        a: {
+                            ar: 'تبدأ بالالتزام الصارم باللحظات الخمس لغسل اليدين (قبل ملامسة المريض، قبل الإجراء المعقم، بعد التعرض لسوائل الجسم، بعد ملامسة المريض، وبعد ملامسة محيطه)، واستخدام معدات الوقاية الشخصية (PPE) المناسبة لكل نوع عزل (تلامسي، رذاذي، هوائي)، والتخلص الآمن من النفايات الطبية الحادة في الـ Safety Box عند امتلائه لثلاثة أرباعه فقط، وعدم إعادة تغطية الإبر (No Recapping).',
+                            en: 'Core practices include strict compliance with the WHO 5 Moments for Hand Hygiene, appropriate Personal Protective Equipment (PPE) for transmission-based isolation (Contact, Droplet, Airborne), safe sharp disposal in puncture-resistant Safety Boxes closed at 3/4 capacity, and strictly never recapping used needles.'
+                        },
+                        tip: {
+                            ar: 'نقطة "عدم إعادة تغطية الإبر" و"امتلاء صندوق الحواد حتى 3/4" من أكثر الأسئلة شيوعاً.',
+                            en: '"No needle recapping" and "3/4 full sharps container" are classic must-mention clinical points.'
+                        }
                     },
                     {
                         category: 'personal',
-                        q: 'كيف توازنين بين العمل بنظام النوبتجيات (Shifts) وحياتكِ الشخصية دون التأثير على أدائك؟',
-                        a: 'أقوم بتنظيم جدول نومي وراحتي بشكل منتظم بما يتوافق مع جدول النوبتجيات، وأحرص على التغذية السليمة والانفصال الذهني الإيجابي أثناء الإجازات. وبمجرد دخولي القسم أكون بكامل تركيزي وطاقتي لصالح المرضى، ولدي مرونة كاملة للعمل في النوبتجيات الصباحية والمسائية والليلية حسب حاجة القسم.',
-                        tip: 'أكدي للمحاور على التزامكِ بالمواعيد ومرونتكِ في النوبتجيات لأن الاستقرار الوظيفي أولوية للإدارة.'
+                        q: {
+                            ar: 'كيف تتعاملين مع أهل المريض المنفعلين أو كثيري الأسئلة في المستشفى؟',
+                            en: 'How do you handle anxious or upset patient family members in the hospital?'
+                        },
+                        a: {
+                            ar: 'أتفهم تماماً أن انفعال الأهل نابع من خوفهم وقلقهم على مريضهم. أستمع لهم باهتمام دون مقاطعة، وأحافظ على نبرة صوت هادئة ولغة جسد متعاطفة، وأقدم لهم المعلومات المصرح لي بها بوضوح، وإذا كان استفسارهم يتعلق بالتشخيص أو الخطة العلاجية أوجههم بلباقة للطبيب المعالج، مع الاستعانة بمشرفة القسم أو الأمن عند أي تجاوز لفظي أو تهديد.',
+                            en: 'I recognize that family frustration usually stems from fear for their loved one. I practice active listening without interrupting, maintain a calm tone and empathetic body language, provide clear updates within my nursing scope, refer diagnostic or treatment-plan questions to the attending physician, and escalate to the charge nurse or security only if safety is threatened.'
+                        },
+                        tip: {
+                            ar: 'التعاطف + الهدوء + احترام حدود الصلاحيات المهنية هي المعادلة الذهبية هنا.',
+                            en: 'Empathy + composure + respecting scope of practice is the winning formula.'
+                        }
+                    },
+                    {
+                        category: 'clinical',
+                        q: {
+                            ar: 'كيف تتصرفين إذا ظهرت علامات تفاعل تحسسي أثناء نقل الدم (Blood Transfusion Reaction)؟',
+                            en: 'What are your immediate steps if a patient develops a Blood Transfusion Reaction?'
+                        },
+                        a: {
+                            ar: '1) أوقف نقل الدم فوراً.\n2) أحافظ على الوريد مفتوحاً باستخدام محلول ملحي عادي (Normal Saline) بوصلة وريدية جديدة تماماً.\n3) أقيس العلامات الحيوية وأقيم حالة المريض التنفسية فوراً.\n4) أبلغ الطبيب وبنك الدم فوراً.\n5) أعيد فحص بيانات كيس الدم وبيانات المريض، وأرسل الكيس والوصلة مع عينات الدم والبول المطلوبة لبنك الدم، ثم أوثق كل الإجراءات بدقة.',
+                            en: '1) Stop the blood transfusion immediately.\n2) Keep the IV line open with 0.9% Normal Saline using brand-new IV tubing.\n3) Assess vital signs and respiratory status immediately.\n4) Notify the physician and blood bank at once.\n5) Recheck blood bag and patient identifiers, send the bag, tubing, and required blood/urine samples to the blood bank, and document thoroughly.'
+                        },
+                        tip: {
+                            ar: 'تذكري دائماً: إيقاف الدم أولاً ثم تغيير الوصلة بمحلول ملحي، ولا يُدفع الدم المتبقي في الوصلة أبداً.',
+                            en: 'Always emphasize stopping the blood first and using NEW tubing—never flush the blood-filled line.'
+                        }
+                    },
+                    {
+                        category: 'clinical',
+                        q: {
+                            ar: 'ما هي خطواتكِ الوقائية لحماية مريض طريح الفراش من قرح الفراش (Pressure Ulcers)؟',
+                            en: 'What preventive measures do you take to protect a bedridden patient from pressure injuries?'
+                        },
+                        a: {
+                            ar: 'تقييم الخطورة بمقياس برادن (Braden Scale) عند الدخول، وتقليب المريض كل ساعتين بانتظام، واستخدام مرتبة هوائية طبية، والحفاظ على جفاف ونظافة الجلد وترطيبه، والتأكد من خلو الملاءات من التجاعيد، ومتابعة التغذية الجيدة الغنية بالبروتين والسوائل بالتعاون مع أخصائي التغذية.',
+                            en: 'I perform a Braden Scale risk assessment upon admission, reposition the patient every 2 hours, utilize pressure-redistributing air mattresses, keep skin clean, dry, and moisturized, ensure wrinkle-free linens, and collaborate with the dietitian to ensure adequate protein and hydration.'
+                        },
+                        tip: {
+                            ar: 'ذِكر مقياس Braden والتقليب كل ساعتين يعكس ممارسة علمية دقيقة.',
+                            en: 'Mentioning the Braden Scale and 2-hour turning schedule shows evidence-based practice.'
+                        }
                     }
                 ]
             },
             uae: {
-                name: 'الإمارات العربية المتحدة',
-                badge: 'مقابلات الإمارات • DHA / DOH / MOHAP',
-                subtitle: 'الأسئلة المتوقعة في مستشفيات دبي وأبوظبي والشارقة وفق معايير JCI وبيئة العمل العالمية.',
+                name: { ar: 'الإمارات العربية المتحدة', en: 'United Arab Emirates' },
+                badge: {
+                    ar: 'مقابلات الإمارات • DHA / DOH / MOHAP',
+                    en: 'UAE • DHA / DOH (HAAD) / MOHAP'
+                },
+                subtitle: {
+                    ar: 'الأسئلة المتوقعة في مستشفيات دبي وأبوظبي والشارقة وفق معايير JCI وبيئة العمل العالمية.',
+                    en: 'Expected interview questions across Dubai, Abu Dhabi, and Sharjah hospitals aligned with JCI standards and multicultural care.'
+                },
                 questions: [
                     {
-                        category: 'personal',
-                        q: 'حدثينا عن وضع ترخيصكِ المهني في الإمارات (DHA / DOH / MOHAP) وخبرتكِ السريرية.',
-                        a: 'أمتلك خطاب الأهلية (Eligibility Letter) / الترخيص الفعال من هيئة الصحة بدبي (DHA) أو دائرة الصحة بأبوظبي (DOH) بعد اجتياز اختبار البرومترك وإتمام التحقق من الشهادات (DataFlow) بنجاح. لدي خبرة سريرية موثقة في بيئة مستشفيات معتمدة، وأتقن العمل على أنظمة السجل الطبي الإلكتروني مثل Cerner أو Malaffi / Nabidh.',
-                        tip: 'في مقابلات الإمارات غالباً ما يُطرح هذا السؤال باللغة الإنجليزية، تدربي على صياغته بثقة باللغتين.'
+                        category: 'quality',
+                        q: {
+                            ar: 'حدثينا عن وضع ترخيصكِ المهني في الإمارات (DHA / DOH / MOHAP) وخبرتكِ السريرية.',
+                            en: 'Tell us about your UAE nursing license status (DHA / DOH / MOHAP) and clinical background.'
+                        },
+                        a: {
+                            ar: 'أمتلك خطاب الأهلية (Eligibility Letter) / الترخيص الفعال من هيئة الصحة بدبي (DHA) أو دائرة الصحة بأبوظبي (DOH) بعد اجتياز اختبار البرومترك وإتمام التحقق من الشهادات (DataFlow) بنجاح. لدي خبرة سريرية موثقة في بيئة مستشفيات معتمدة، وأتقن العمل على أنظمة السجل الطبي الإلكتروني مثل Cerner أو Malaffi / Nabidh.',
+                            en: 'I hold an active Eligibility Letter / Nursing License from DHA (or DOH/MOHAP) after passing the licensing exam and completing Primary Source Verification (DataFlow). I bring verified clinical experience in accredited hospitals and proficiency in EHR systems such as Cerner, Epic, Malaffi, or Nabidh.'
+                        },
+                        tip: {
+                            ar: 'في مقابلات الإمارات غالباً ما يُطرح هذا السؤال باللغة الإنجليزية، تدربي على صياغته بثقة باللغتين.',
+                            en: 'UAE interviews are typically conducted in English; practice stating your DataFlow and license status smoothly.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'ما هي معايير اللجنة الدولية المشتركة (JCI)، وكيف تنعكس على جودة الرعاية التمريضية؟',
-                        a: 'معايير JCI هي أعلى معايير اعتماد عالمية للجودة وسلامة المرضى، وتُطبق على نطاق واسع في مستشفيات الإمارات. تنعكس على عملي اليومي عبر التطبيق الدقيق لأهداف سلامة المرضى الدولية (IPSG)، والالتزام بالرعاية المتمركزة حول المريض (Patient-Centered Care)، والحصول على الموافقة المستنيرة (Informed Consent)، والممارسة المبنية على الدليل العلمي، وإدارة المخاطر.',
-                        tip: 'اربطي معايير JCI بمفهوم (Patient-Centered Care) لأنه محور أساسي في القطاع الصحي الإماراتي.'
+                        q: {
+                            ar: 'ما هي معايير اللجنة الدولية المشتركة (JCI)، وكيف تنعكس على جودة الرعاية التمريضية؟',
+                            en: 'What is JCI accreditation, and how does it shape daily nursing practice?'
+                        },
+                        a: {
+                            ar: 'معايير JCI هي أعلى معايير اعتماد عالمية للجودة وسلامة المرضى، وتُطبق على نطاق واسع في مستشفيات الإمارات. تنعكس على عملي اليومي عبر التطبيق الدقيق لأهداف سلامة المرضى الدولية (IPSG)، والالتزام بالرعاية المتمركزة حول المريض (Patient-Centered Care)، والحصول على الموافقة المستنيرة (Informed Consent)، والممارسة المبنية على الدليل العلمي، وإدارة المخاطر.',
+                            en: 'JCI (Joint Commission International) represents the gold standard in global healthcare accreditation widely adopted across the UAE. In daily nursing practice, it drives strict adherence to IPSG goals, Patient-Centered Care, informed consent verification, evidence-based clinical pathways, medication management, and proactive risk reduction.'
+                        },
+                        tip: {
+                            ar: 'اربطي معايير JCI بمفهوم (Patient-Centered Care) لأنه محور أساسي في القطاع الصحي الإماراتي.',
+                            en: 'Linking JCI with Patient-Centered Care resonates strongly with UAE healthcare leaders.'
+                        }
                     },
                     {
                         category: 'personal',
-                        q: 'بيئة العمل في الإمارات متعددة الجنسيات؛ كيف تتعاملين مع حاجز اللغة وتنوع الثقافات؟',
-                        a: 'أحترم التنوع الثقافي والديني لجميع المرضى والزملاء دون أي تحيز. أتواصل بوضوح باستخدام اللغة الإنجليزية الطبية السليمة والعربية، وعند وجود مريض يتحدث لغة أخرى أستعين بخدمة المترجم الطبي المعتمد في المستشفى لضمان فهمه الكامل لخطته العلاجية وموافقته المستنيرة، مع استخدام لغة جسد إيجابية ومهنية.',
-                        tip: 'لا تقولي "أستعين بأحد أقارب المريض للترجمة في الأمور الطبية الدقيقة"، بل قولي "المترجم الطبي المعتمد".'
+                        q: {
+                            ar: 'بيئة العمل في الإمارات متعددة الجنسيات؛ كيف تتعاملين مع حاجز اللغة وتنوع الثقافات؟',
+                            en: 'The UAE healthcare environment is highly multicultural. How do you handle language barriers and cultural diversity?'
+                        },
+                        a: {
+                            ar: 'أحترم التنوع الثقافي والديني لجميع المرضى والزملاء دون أي تحيز. أتواصل بوضوح باستخدام اللغة الإنجليزية الطبية السليمة والعربية، وعند وجود مريض يتحدث لغة أخرى أستعين بخدمة المترجم الطبي المعتمد في المستشفى لضمان فهمه الكامل لخطته العلاجية وموافقته المستنيرة، مع استخدام لغة جسد إيجابية ومهنية.',
+                            en: 'I embrace cultural and religious diversity with zero bias. I communicate clearly in medical English and Arabic, and whenever a language barrier exists, I use the hospital’s certified medical interpreter service—rather than relying on family members for critical clinical explanations—to ensure accurate understanding and valid informed consent.'
+                        },
+                        tip: {
+                            ar: 'لا تقولي "أستعين بأحد أقارب المريض للترجمة في الأمور الطبية الدقيقة"، بل قولي "المترجم الطبي المعتمد".',
+                            en: 'Always specify using a "certified medical interpreter" for clinical consent and complex medical instructions.'
+                        }
                     },
                     {
                         category: 'clinical',
-                        q: 'اشرحي بروتوكول SBAR للتواصل الطبي ومتى تستخدمينه؟',
-                        a: 'SBAR هو أداة تواصل قياسية ومنظمة تُستخدم أثناء تسليم الشفت (Handover) أو عند إبلاغ الطبيب بتدهور حالة مريض:\n- S (Situation): الموقف الحالي واسم المريض والمشكلة.\n- B (Background): التاريخ المرضي والتشخيص والأدوية.\n- A (Assessment): تقييمي الحالي والعلامات الحيوية.\n- R (Recommendation): التوصية أو الإجراء المطلوب من الطبيب.',
-                        tip: 'كوني مستعدة لتطبيق مثال سريع لـ SBAR على حالة مريض يعاني من ضيق تنفس أو هبوط ضغط.'
+                        q: {
+                            ar: 'اشرحي بروتوكول SBAR للتواصل الطبي ومتى تستخدمينه؟',
+                            en: 'Explain the SBAR communication framework and when you use it.'
+                        },
+                        a: {
+                            ar: 'SBAR هو أداة تواصل قياسية ومنظمة تُستخدم أثناء تسليم الشفت (Handover) أو عند إبلاغ الطبيب بتدهور حالة مريض:\n- S (Situation): الموقف الحالي واسم المريض والمشكلة.\n- B (Background): التاريخ المرضي والتشخيص والأدوية.\n- A (Assessment): تقييمي الحالي والعلامات الحيوية.\n- R (Recommendation): التوصية أو الإجراء المطلوب من الطبيب.',
+                            en: 'SBAR is a standardized clinical communication tool used during shift handovers and physician escalations:\n- S (Situation): Patient identity and current clinical concern.\n- B (Background): Relevant medical history, diagnosis, and current medications.\n- A (Assessment): Latest vital signs, physical findings, and clinical impression.\n- R (Recommendation): Specific action or medical order requested.'
+                        },
+                        tip: {
+                            ar: 'كوني مستعدة لتطبيق مثال سريع لـ SBAR على حالة مريض يعاني من ضيق تنفس أو هبوط ضغط.',
+                            en: 'Be ready to role-play a 30-second SBAR report for a deteriorating patient during the interview.'
+                        }
                     },
                     {
                         category: 'clinical',
-                        q: 'ما هو دوركِ الفوري عند إعلان حالة طوارئ توقف القلب (Code Blue)؟',
-                        a: 'أبدأ فوراً بالتحقق من الاستجابة والتنفس والنبض لمدة لا تتجاوز 10 ثوانٍ، ثم أفعّل نداء (Code Blue) وأطلب عربة الطوارئ (Crash Cart) وجهاز الصدمات (AED/Defibrillator). أبدأ الإنعاش القلبي الرئوي عالي الجودة (High-Quality CPR) بمعدل 100-120 ضغطة/دقيقة وبعمق 5-6 سم دون تأخير حتى وصول فريق الإنعاش، ثم أتولى الدور المحدد لي (إعطاء أدوية، توثيق زمني، أو تبديل الضغطات).',
-                        tip: 'في الإمارات تُسأل الممرضات كثيراً عن تفاصيل الـ BLS و ACLS وعربة الطوارئ وفحصها اليومي.'
+                        q: {
+                            ar: 'ما هو دوركِ الفوري عند إعلان حالة طوارئ توقف القلب (Code Blue)؟',
+                            en: 'What is your immediate role when discovering a patient in cardiac arrest (Code Blue)?'
+                        },
+                        a: {
+                            ar: 'أبدأ فوراً بالتحقق من الاستجابة والتنفس والنبض لمدة لا تتجاوز 10 ثوانٍ، ثم أفعّل نداء (Code Blue) وأطلب عربة الطوارئ (Crash Cart) وجهاز الصدمات (AED/Defibrillator). أبدأ الإنعاش القلبي الرئوي عالي الجودة (High-Quality CPR) بمعدل 100-120 ضغطة/دقيقة وبعمق 5-6 سم دون تأخير حتى وصول فريق الإنعاش، ثم أتولى الدور المحدد لي (إعطاء أدوية، توثيق زمني، أو تبديل الضغطات).',
+                            en: 'I immediately check responsiveness, breathing, and carotid pulse for no more than 10 seconds, activate Code Blue, call for the Crash Cart and defibrillator, and initiate High-Quality CPR (100–120 compressions/min, 5–6 cm depth, full chest recoil) without delay. Once the code team arrives, I take an assigned role such as medication administration, recorder, or compressor rotation.'
+                        },
+                        tip: {
+                            ar: 'في الإمارات تُسأل الممرضات كثيراً عن تفاصيل الـ BLS و ACLS وعربة الطوارئ وفحصها اليومي.',
+                            en: 'Know exact CPR metrics (rate, depth, 30:2 ratio) and daily Crash Cart checklist procedures.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'كيف تضمنين أمن وسرية معلومات المريض في السجل الطبي الإلكتروني (EMR Confidentiality)؟',
-                        a: 'ألتزم بتسجيل الخروج (Log Out) فور الانتهاء من استخدام الجهاز، وعدم مشاركة بيانات دخولي مع أي شخص، وعدم الاطلاع إلا على ملفات المرضى الموكلة برعايتهم فقط (Need-to-Know Basis)، وعدم تصوير أي جزء من الشاشة أو الملف الطبي بالهاتف الشخصي، وعدم مناقشة حالة المرضى في الأماكن العامة كالمصاعد أو الممرات.',
-                        tip: 'قوانين خصوصية البيانات الصحية في الإمارات صارمة جداً، فإبراز التزامكِ بها نقطة قوة كبرى.'
+                        q: {
+                            ar: 'كيف تضمنين أمن وسرية معلومات المريض في السجل الطبي الإلكتروني (EMR Confidentiality)؟',
+                            en: 'How do you safeguard patient data privacy and EMR confidentiality?'
+                        },
+                        a: {
+                            ar: 'ألتزم بتسجيل الخروج (Log Out) فور الانتهاء من استخدام الجهاز، وعدم مشاركة بيانات دخولي مع أي شخص، وعدم الاطلاع إلا على ملفات المرضى الموكلة برعايتهم فقط (Need-to-Know Basis)، وعدم تصوير أي جزء من الشاشة أو الملف الطبي بالهاتف الشخصي، وعدم مناقشة حالة المرضى في الأماكن العامة كالمصاعد أو الممرات.',
+                            en: 'I always log out of workstations immediately after use, never share credentials, access only charts of patients under my direct care (Need-to-Know basis), never take photos of screens or records on personal devices, and never discuss patient details in public areas such as elevators or hallways.'
+                        },
+                        tip: {
+                            ar: 'قوانين خصوصية البيانات الصحية في الإمارات صارمة جداً، فإبراز التزامكِ بها نقطة قوة كبرى.',
+                            en: 'UAE health data privacy laws are strictly enforced; highlighting compliance is a major strength.'
+                        }
                     },
                     {
                         category: 'clinical',
-                        q: 'كيف تقيمين الألم (Pain Assessment) وتديرينه وفق معايير JCI؟',
-                        a: 'يُعد الألم العلامة الحيوية الخامسة. أقيمه باستخدام المقياس المناسب لعمر وحالة المريض (مثل المقياس الرقمي 0-10 للبالغين، مقياس الوجوه Wong-Baker للأطفال، أو FLACC لغير الناطقين)، وأسجل موقع الألم وشدته ومدته. ثم أطبق التدخلات غير الدوائية والدوائية الموصوفة، وأعيد التقييم بعد 30 دقيقة للأدوية الوريدية و60 دقيقة للأدوية الفموية وأوثق الاستجابة.',
-                        tip: 'إعادة تقييم الألم بعد إعطاء المسكن وتوثيق النتيجة هو ما يركز عليه مفتشو JCI تحديداً.'
+                        q: {
+                            ar: 'كيف تقيمين الألم (Pain Assessment) وتديرينه وفق معايير JCI؟',
+                            en: 'How do you perform Pain Assessment and reassessment according to JCI standards?'
+                        },
+                        a: {
+                            ar: 'يُعد الألم العلامة الحيوية الخامسة. أقيمه باستخدام المقياس المناسب لعمر وحالة المريض (مثل المقياس الرقمي 0-10 للبالغين، مقياس الوجوه Wong-Baker للأطفال، أو FLACC لغير الناطقين)، وأسجل موقع الألم وشدته ومدته. ثم أطبق التدخلات غير الدوائية والدوائية الموصوفة، وأعيد التقييم بعد 30 دقيقة للأدوية الوريدية و60 دقيقة للأدوية الفموية وأوثق الاستجابة.',
+                            en: 'Pain is assessed as the 5th vital sign using an age- and condition-appropriate tool (Numeric 0–10 for adults, Wong-Baker FACES for pediatrics, FLACC/CPOT for non-verbal patients), documenting location, quality, and intensity. After administering prescribed pharmacological or non-pharmacological interventions, I reassess and document pain relief within 30 minutes for IV meds and 60 minutes for oral meds.'
+                        },
+                        tip: {
+                            ar: 'إعادة تقييم الألم بعد إعطاء المسكن وتوثيق النتيجة هو ما يركز عليه مفتشو JCI تحديداً.',
+                            en: 'Timely post-intervention reassessment (30 min IV / 60 min PO) is a favorite JCI surveyor question.'
+                        }
                     },
                     {
                         category: 'quality',
-                        q: 'ما هي خطواتكِ عند استلام أمر طبي شفهي أو هاتفي (Verbal / Telephone Order)؟',
-                        a: 'الأوامر الشفهية تقتصر فقط على حالات الطوارئ الحقيقية. أقوم بتدوين الأمر فوراً (Write Down)، ثم أقرأه مرة أخرى للطبيب (Read Back) مع تهجئة اسم الدواء وتأكيد الجرعة للتأكد من المطابقة (Verify)، وأطلب من زميل الاستماع إذا أمكن، ثم أتابع توقيع الطبيب الإلكتروني على الأمر خلال المدة المحددة بسياسة المستشفى (غالباً 24 ساعة).',
-                        tip: 'احفظي المصطلح الإنجليزي: Write Down, Read Back, and Verify.'
+                        q: {
+                            ar: 'ما هي خطواتكِ عند استلام أمر طبي شفهي أو هاتفي (Verbal / Telephone Order)؟',
+                            en: 'What is the proper protocol for receiving a Verbal or Telephone Order?'
+                        },
+                        a: {
+                            ar: 'الأوامر الشفهية تقتصر فقط على حالات الطوارئ الحقيقية. أقوم بتدوين الأمر فوراً (Write Down)، ثم أقرأه مرة أخرى للطبيب (Read Back) مع تهجئة اسم الدواء وتأكيد الجرعة للتأكد من المطابقة (Verify)، وأطلب من زميل الاستماع إذا أمكن، ثم أتابع توقيع الطبيب الإلكتروني على الأمر خلال المدة المحددة بسياسة المستشفى (غالباً 24 ساعة).',
+                            en: 'Verbal orders are restricted to true emergencies. I immediately Write Down the order, Read Back the full order—spelling out drug names and confirming exact doses—to Verify accuracy with the physician, involve a second nurse witness if available, and ensure physician co-signature within hospital policy (typically 24 hours).'
+                        },
+                        tip: {
+                            ar: 'احفظي المصطلح الإنجليزي: Write Down, Read Back, and Verify.',
+                            en: 'Clearly state the three-step golden rule: Write Down, Read Back, and Verify.'
+                        }
                     },
                     {
                         category: 'personal',
-                        q: 'كيف تطورين مهاراتكِ التمريضية وتواكبين التحديثات الطبية المستمرة؟',
-                        a: 'أحرص على حضور الدورات والندوات المعتمدة للحصول على ساعات التعليم الطبي المستمر (CME/CPD)، ومراجعة الإرشادات السريرية المحدثة والممارسة المبنية على البراهين (Evidence-Based Practice)، والمشاركة الفعالة في برامج التدريب الداخلي بالمستشفى وتبادل الخبرات مع الزملاء لتقديم أفضل رعاية ممكنة.',
-                        tip: 'الالتزام بالتطوير المهني المستمر يعكس طموحكِ المهني ورغبتكِ في التميز.'
+                        q: {
+                            ar: 'كيف تطورين مهاراتكِ التمريضية وتواكبين التحديثات الطبية المستمرة؟',
+                            en: 'How do you keep your clinical nursing skills updated with evidence-based practice?'
+                        },
+                        a: {
+                            ar: 'أحرص على حضور الدورات والندوات المعتمدة للحصول على ساعات التعليم الطبي المستمر (CME/CPD)، ومراجعة الإرشادات السريرية المحدثة والممارسة المبنية على البراهين (Evidence-Based Practice)، والمشاركة الفعالة في برامج التدريب الداخلي بالمستشفى وتبادل الخبرات مع الزملاء لتقديم أفضل رعاية ممكنة.',
+                            en: 'I actively earn accredited CME/CPD hours, review updated international clinical guidelines and Evidence-Based Practice journals, participate in hospital in-service training and quality improvement initiatives, and collaborate closely with senior mentors to continuously elevate patient outcomes.'
+                        },
+                        tip: {
+                            ar: 'الالتزام بالتطوير المهني المستمر يعكس طموحكِ المهني ورغبتكِ في التميز.',
+                            en: 'Demonstrating a growth mindset shows long-term value and leadership potential.'
+                        }
                     }
                 ]
             }
         };
 
         /* =========================================================================
-           2. SITUATIONAL MOCK EXAM DATABASE (10 Realistic Clinical Scenarios)
+           3. BILINGUAL SITUATIONAL MOCK EXAM DATABASE (10 Realistic Scenarios)
            ========================================================================= */
         const quizScenarios = [
             {
-                tag: 'سلامة الدواء (Medication Safety)',
-                question: 'أثناء تحضيركِ لدواء وريدي لمريض، لاحظتِ أن الجرعة التي كتبها الطبيب في الملف أعلى بكثير من الجرعة الآمنة المعتادة لهذا الدواء. ما هو التصرف الصحيح؟',
-                options: [
-                    'إعطاء الدواء كما كتبه الطبيب لأن المسؤولية تقع عليه وحده.',
-                    'تقليل الجرعة من تلقاء نفسكِ للجرعة المعتادة وإعطاؤها للمريض دون إخبار الطبيب.',
-                    'إيقاف إعطاء الدواء والتواصل فوراً مع الطبيب المعالج (والصيدلي الإكلينيكي عند الحاجة) لمراجعة وتصحيح الجرعة وتوثيق ذلك.',
-                    'تجاهل الجرعة وتأجيلها للشفت التالي ليقوم زميلكِ بالتصرف.'
-                ],
+                tag: { ar: 'سلامة الدواء (Medication Safety)', en: 'Medication Safety' },
+                question: {
+                    ar: 'أثناء تحضيركِ لدواء وريدي لمريض، لاحظتِ أن الجرعة التي كتبها الطبيب في الملف أعلى بكثير من الجرعة الآمنة المعتادة لهذا الدواء. ما هو التصرف الصحيح؟',
+                    en: 'While preparing an IV medication for a patient, you notice the physician’s ordered dose is significantly higher than the standard safe dosage range. What is your appropriate action?'
+                },
+                options: {
+                    ar: [
+                        'إعطاء الدواء كما كتبه الطبيب لأن المسؤولية تقع عليه وحده.',
+                        'تقليل الجرعة من تلقاء نفسكِ للجرعة المعتادة وإعطاؤها للمريض دون إخبار الطبيب.',
+                        'إيقاف إعطاء الدواء والتواصل فوراً مع الطبيب المعالج (والصيدلي الإكلينيكي عند الحاجة) لمراجعة وتصحيح الجرعة وتوثيق ذلك.',
+                        'تجاهل الجرعة وتأجيلها للشفت التالي ليقوم زميلكِ بالتصرف.'
+                    ],
+                    en: [
+                        'Administer the dose as written since the physician holds sole responsibility.',
+                        'Independently reduce the dose to the normal range and give it without notifying the physician.',
+                        'Hold the medication, immediately contact the prescribing physician (and clinical pharmacist if needed) to clarify/correct the order, and document the communication.',
+                        'Skip the dose and leave it for the next shift nurse to handle.'
+                    ]
+                },
                 correct: 2,
-                rationale: 'الممرضة هي خط الدفاع الأخير لسلامة المريض (Patient Advocate). يُمنع تماماً إعطاء جرعة مشكوك في سلامتها أو تعديلها دون أمر طبي؛ يجب التحقق الفوري مع الطبيب وتصحيح الأمر قبل الإعطاء.'
+                rationale: {
+                    ar: 'الممرضة هي خط الدفاع الأخير لسلامة المريض (Patient Advocate). يُمنع تماماً إعطاء جرعة مشكوك في سلامتها أو تعديلها دون أمر طبي؛ يجب التحقق الفوري مع الطبيب وتصحيح الأمر قبل الإعطاء.',
+                    en: 'The nurse is the final safety barrier and patient advocate. Never administer a questionable dose or alter an order independently; always hold, clarify with the prescriber/pharmacist, and document.'
+                }
             },
             {
-                tag: 'التواصل وإدارة الغضب',
-                question: 'دخل مرافق مريض إلى محطة التمريض وهو في حالة غضب وانفعال شديد بسبب تأخر نتيجة أشعة والده، وبدأ برفع صوته أمام المرضى. كيف تتصرفين؟',
-                options: [
-                    'الرد عليه بنفس النبرة المرتفعة لفرض الاحترام وإنهاء الموقف بسرعة.',
-                    'تجاهله تماماً ومواصلة العمل على جهاز الكمبيوتر حتى يهدأ وحده.',
-                    'المحافظة على الهدوء، الاستماع له بتعاطف، دعوته بلباقة لمكان هادئ بعيداً عن المرضى، ومتابعة حالة الأشعة وإبلاغه بالوقت المتوقع.',
-                    'طلب الأمن فوراً لطرده من القسم قبل الاستماع لشكواه.'
-                ],
+                tag: { ar: 'التواصل وإدارة الغضب', en: 'Communication & De-escalation' },
+                question: {
+                    ar: 'دخل مرافق مريض إلى محطة التمريض وهو في حالة غضب وانفعال شديد بسبب تأخر نتيجة أشعة والده، وبدأ برفع صوته أمام المرضى. كيف تتصرفين؟',
+                    en: 'An upset family member approaches the nurses’ station shouting in front of other patients due to a delay in his father’s radiology results. How should you respond?'
+                },
+                options: {
+                    ar: [
+                        'الرد عليه بنفس النبرة المرتفعة لفرض الاحترام وإنهاء الموقف بسرعة.',
+                        'تجاهله تماماً ومواصلة العمل على جهاز الكمبيوتر حتى يهدأ وحده.',
+                        'المحافظة على الهدوء، الاستماع له بتعاطف، دعوته بلباقة لمكان هادئ بعيداً عن المرضى، ومتابعة حالة الأشعة وإبلاغه بالوقت المتوقع.',
+                        'طلب الأمن فوراً لطرده من القسم قبل الاستماع لشكواه.'
+                    ],
+                    en: [
+                        'Match his raised tone to assert authority and end the argument quickly.',
+                        'Ignore him and continue charting on the computer until he calms down.',
+                        'Remain calm, listen empathetically, politely invite him to a quiet private area away from patients, follow up on the radiology status, and give him a clear update.',
+                        'Call security immediately to remove him before hearing his concern.'
+                    ]
+                },
                 correct: 2,
-                rationale: 'استخدام مهارات التهدئة (De-escalation) عبر الهدوء، التعاطف، ونقل النقاش لمكان خاص يمتص غضب المرافق ويحافظ على هدوء القسم، ولا يُستدعى الأمن إلا في حال وجود تهديد أو عنف فعلي.'
+                rationale: {
+                    ar: 'استخدام مهارات التهدئة (De-escalation) عبر الهدوء، التعاطف، ونقل النقاش لمكان خاص يمتص غضب المرافق ويحافظ على هدوء القسم، ولا يُستدعى الأمن إلا في حال وجود تهديد أو عنف فعلي.',
+                    en: 'De-escalation through calmness, active listening, and moving to a private space resolves tension while preserving unit tranquility. Security is called only if there is an actual threat or aggression.'
+                }
             },
             {
-                tag: 'السلامة المهنية ومكافحة العدوى',
-                question: 'أثناء سحب عينة دم من مريض، تعرضتِ لوخز إبرة ملوثة (Needle Stick Injury) في إصبعكِ. ما هي الخطوة الأولى الفورية التي يجب القيام بها؟',
-                options: [
-                    'عصر مكان الجرح بقوة لإخراج الدم ثم تغطيته بلاصق طبي وإكمال العمل.',
-                    'غسل مكان الوخز فوراً بالماء الجاري والصابون دون عصر الجرح، ثم التبليغ الفوري والتوجه لعيادة صحة الموظفين/الطوارئ لتقييم الوقاية (PEP).',
-                    'مسح الإصبع بالكحول المركز فقط والانتظار لنهاية الشفت للإبلاغ.',
-                    'عدم الإبلاغ عن الحادث تجنباً للمساءلة الإدارية.'
-                ],
+                tag: { ar: 'حالات الطوارئ (Code Blue)', en: 'Emergency Response (Code Blue)' },
+                question: {
+                    ar: 'دخلتِ غرفة مريض لقياس علاماته الحيوية فوجدتِه فاقداً للوعي تماماً ولا يتنفس ولا يوجد نبض سُباتي. ما هو أول تسلسل صحيح للتصرف؟',
+                    en: 'You enter a patient’s room to check vitals and find them completely unresponsive, not breathing, with no palpable carotid pulse. What is your immediate priority sequence?'
+                },
+                options: {
+                    ar: [
+                        'الذهاب لإحضار عربة الطوارئ بنفسكِ أولاً وترك المريض.',
+                        'تفعيل نداء الطوارئ (Code Blue) وطلب المساعدة وجهاز الصدمات، والبدء فوراً بالإنعاش القلبي الرئوي (CPR) بالضغطات الصدرية.',
+                        'الاتصال بالطبيب المناوب والانتظار حتى يصل لفحص المريض.',
+                        'قياس ضغط الدم ومستوى الأكسجين أولاً قبل فعل أي شيء.'
+                    ],
+                    en: [
+                        'Leave the patient to personally bring the Crash Cart first.',
+                        'Activate Code Blue, call for help and a defibrillator, and immediately begin High-Quality CPR starting with chest compressions.',
+                        'Call the on-call physician and wait for them to arrive and assess the patient.',
+                        'Check blood pressure and SpO2 before taking any other action.'
+                    ]
+                },
                 correct: 1,
-                rationale: 'عصر الجرح قد يزيد من تلف الأنسجة وفرصة دخول الفيروس. الإجراء الصحيح عالمياً هو الغسل الفوري بالماء الجاري والصابون، ثم التبليغ العاجل (OVR) والتوجه خلال ساعات قليلة لتقييم العلاج الوقائي بعد التعرض.'
+                rationale: {
+                    ar: 'كل ثانية تصنع فرقاً في توقف القلب؛ الأولوية القصوى هي تفعيل نظام الطوارئ (Code Blue) والبدء الفوري بضغطات الصدر عالية الجودة (C-A-B) للحفاظ على تروية الدماغ والقلب.',
+                    en: 'Every second counts in cardiac arrest. Immediate Code Blue activation and High-Quality chest compressions (C-A-B) preserve vital cerebral and coronary perfusion.'
+                }
             },
             {
-                tag: 'أخلاقيات المهنة وسرية المعلومات',
-                question: 'اتصل شخص هاتفياً بالقسم وعرّف نفسه بأنه ابن عم أحد المرضى المنومين، وطلب معرفة تفاصيل التشخيص ونتائج التحاليل الطبية للمريض. ما هو تصرفكِ المهني؟',
-                options: [
-                    'إخباره بكافة تفاصيل التشخيص والنتائج لأنه من أقارب المريض.',
-                    'الاعتذار بلباقة وتوضيح أن سياسة سرية معلومات المرضى تمنع الإفصاح عن أي بيانات طبية عبر الهاتف أو لغير المخولين دون إذن المريض.',
-                    'إعطاؤه نتائج التحاليل فقط دون ذكر التشخيص.',
-                    'إرسال صورة من تقرير المريض له عبر تطبيق واتساب.'
-                ],
+                tag: { ar: 'الأوامر الشفهية (Verbal Orders)', en: 'Verbal / Telephone Orders' },
+                question: {
+                    ar: 'اتصل الطبيب المناوب هاتفياً في حالة طارئة وأعطى أمراً شفهياً بدواء عاجل لمريض، لكن الصوت كان غير واضح قليلاً. ما هو الإجراء الآمن؟',
+                    en: 'During an urgent situation, the on-call physician gives a telephone order for an emergency medication, but the audio is slightly unclear. What is the safe nursing action?'
+                },
+                options: {
+                    ar: [
+                        'إعطاء الدواء الذي تعتقدين أنكِ سمعتِه لتوفير الوقت.',
+                        'الطلب من الطبيب تكرار الأمر بوضوح، وتدوينه فوراً (Write Down)، ثم قراءته وتهجئة اسم الدواء والجرعة للطبيب للتأكيد (Read Back & Verify) قبل الإعطاء.',
+                        'سؤال زميلتكِ لتخمين اسم الدواء المناسب للحالة.',
+                        'الانتظار حتى الصباح ليحضر الطبيب ويكتب الأمر بنفسه.'
+                    ],
+                    en: [
+                        'Administer the medication you think you heard to save time.',
+                        'Ask the physician to repeat clearly, Write Down the order immediately, Read Back spelling the drug name and dose, and Verify accuracy before administration.',
+                        'Ask a colleague to guess which medication fits the patient’s condition.',
+                        'Wait until morning rounds for the physician to write the order in person.'
+                    ]
+                },
                 correct: 1,
-                rationale: 'الحفاظ على سرية معلومات المريض (Confidentiality) واجب أخلاقي وقانوني صارم. لا يجوز الإفصاح عن أي معلومة طبية عبر الهاتف أو لأي شخص لم يخول له المريض ذلك.'
+                rationale: {
+                    ar: 'بروتوكول السلامة الدولي (IPSG 2) يُلزم بقاعدة Write Down, Read Back, and Verify لأي أمر هاتفي أو شفهي لمنع أخطاء الأدوية المتشابهة في النطق (LASA).',
+                    en: 'IPSG Goal 2 mandates "Write Down, Read Back, and Verify" for all verbal/telephone orders to eliminate sound-alike (LASA) medication errors.'
+                }
             },
             {
-                tag: 'حالات الطوارئ (Code Blue)',
-                question: 'دخلتِ غرفة مريض لقياس علاماته الحيوية فوجدتِه فاقداً للوعي تماماً ولا يتنفس ولا يوجد نبض سُباتي. ما هو أول تسلسل صحيح للتصرف؟',
-                options: [
-                    'الذهاب لإحضار عربة الطوارئ بنفسكِ أولاً وترك المريض.',
-                    'تفعيل نداء الطوارئ (Code Blue) وطلب المساعدة وجهاز الصدمات، والبدء فوراً بالإنعاش القلبي الرئوي (CPR) بالضغطات الصدرية.',
-                    'الاتصال بالطبيب المناوب والانتظار حتى يصل لفحص المريض.',
-                    'قياس ضغط الدم ومستوى الأكسجين أولاً قبل فعل أي شيء.'
-                ],
+                tag: { ar: 'السلامة المهنية (Needle-Stick Injury)', en: 'Occupational Safety (Needle-Stick)' },
+                question: {
+                    ar: 'أثناء سحب عينة دم من مريض، تعرضتِ لوخز إبرة ملوثة (Needle-Stick Injury) في إصبعكِ. ما هي الخطوة الأولى الفورية؟',
+                    en: 'While drawing blood from a patient, you sustain a contaminated needle-stick injury to your finger. What is the immediate first step?'
+                },
+                options: {
+                    ar: [
+                        'عصر مكان الجرح بقوة لإخراج الدم ثم تغطيته بلاصق طبي وإكمال العمل.',
+                        'غسل مكان الوخز فوراً بالماء الجاري والصابون دون عصر الجرح، ثم التبليغ الفوري والتوجه لعيادة صحة الموظفين/الطوارئ لتقييم الوقاية (PEP).',
+                        'مسح الإصبع بالكحول المركز فقط والانتظار لنهاية الشفت للإبلاغ.',
+                        'عدم الإبلاغ عن الحادث تجنباً للمساءلة الإدارية.'
+                    ],
+                    en: [
+                        'Squeeze the puncture site forcefully to express blood, cover with a bandage, and keep working.',
+                        'Wash the area immediately with soap and running water without squeezing, report the incident promptly, and go to Employee Health/ER for Post-Exposure Prophylaxis (PEP) evaluation.',
+                        'Wipe with strong alcohol only and wait until the end of the shift to report.',
+                        'Avoid reporting the injury to prevent administrative questioning.'
+                    ]
+                },
                 correct: 1,
-                rationale: 'كل ثانية تصنع فرقاً في توقف القلب؛ الأولوية القصوى هي تفعيل نظام الطوارئ (Code Blue) والبدء الفوري بضغطات الصدر عالية الجودة (C-A-B) للحفاظ على تروية الدماغ والقلب.'
+                rationale: {
+                    ar: 'عصر الجرح قد يزيد من تلف الأنسجة وفرصة دخول الفيروس. الإجراء الصحيح عالمياً هو الغسل الفوري بالماء الجاري والصابون، ثم التبليغ العاجل (OVR) وتقييم العلاج الوقائي (PEP).',
+                    en: 'Squeezing can cause tissue trauma and increase viral entry. Global protocols require immediate gentle washing with soap and running water, prompt OVR reporting, and urgent PEP assessment.'
+                }
             },
             {
-                tag: 'حقوق المريض (Patient Rights)',
-                question: 'مريض واعٍ ومدرك تماماً رفض أخذ جرعة مضاد حيوي مهمة رغم شرحكِ لأهميتها. كيف تتصرفين وفق المعايير المهنية؟',
-                options: [
-                    'إقناعه بالقوة أو وضع الدواء في عصيره دون علمه لمصلحته.',
-                    'احترام حقه في الرفض، الاستماع لأسبابه وتثقيفه بهدوء حول مخاطر الرفض، إبلاغ الطبيب المعالج، وتوثيق الرفض والتثقيف بدقة في الملف الطبي.',
-                    'ترك الدواء على الطاولة بجواره وتوثيق أنه تم إعطاؤه.',
-                    'الامتناع عن تقديم باقي الرعاية التمريضية له لأنه غير متعاون.'
-                ],
-                correct: 1,
-                rationale: 'للمريض الواعي الأهلية الكاملة لرفض العلاج (Right to Refuse). دور الممرضة هو الاستكشاف والتثقيف الصحي وإبلاغ الطبيب والتوثيق الدقيق لحماية حقوق المريض والممارس.'
-            },
-            {
-                tag: 'الأمانة المهنية ومكافحة العدوى',
-                question: 'طلب منكِ أحد الزملاء توثيق قياس العلامات الحيوية لمريض في ملفه الإلكتروني رغم أنكِ لم تقومي بقياسها، بحجة أنه مشغول جداً. ما هو موقفكِ؟',
-                options: [
-                    'الموافقة وتوثيق قراءات مشابهة للقراءات السابقة مساعدةً للزميل.',
-                    'توثيقها باسمكِ ثم قياسها لاحقاً عندما تتفرغين.',
-                    'الرفض بأدب وحزم لأن توثيق إجراء لم يتم يُعد تزويراً ومخالفة خطيرة لسلامة المريض، وعرض المساعدة بقياس العلامات الحيوية فعلياً للمريض وتوثيقها.',
-                    'إعطاؤه كلمة مرور حسابكِ ليوثقها بنفسه.'
-                ],
+                tag: { ar: 'مكافحة العدوى (Infection Control)', en: 'Infection Control Compliance' },
+                question: {
+                    ar: 'لاحظتِ أن أحد زملائكِ يتنقل بين مريضين في غرفة العزل التلامسي دون غسل يديه أو تغيير القفازات. كيف تتصرفين؟',
+                    en: 'You observe a colleague moving between two patients in a Contact Isolation room without performing hand hygiene or changing gloves. What should you do?'
+                },
+                options: {
+                    ar: [
+                        'تجاهل الموقف لتجنب إحراج الزميل أو خلق خلاف شخصي.',
+                        'توبيخه بصوت مرتفع أمام المرضى ليكون عبرة للآخرين.',
+                        'تذكيره بلباقة ومهنية على انفراد بأهمية غسل اليدين وتغيير القفازات لحماية المرضى من العدوى، وتصعيد الأمر لمشرفة القسم إذا تكرر السلوك.',
+                        'الانتظار حتى نهاية الشهر وذكر ذلك في اجتماع القسم.'
+                    ],
+                    en: [
+                        'Ignore it to avoid embarrassing your colleague or creating workplace tension.',
+                        'Scold your colleague loudly in front of the patients to set an example.',
+                        'Politely and professionally remind your colleague privately to perform hand hygiene and change gloves to protect patients, escalating to the charge nurse if non-compliance persists.',
+                        'Wait until the end of the month to mention it in a general meeting.'
+                    ]
+                },
                 correct: 2,
-                rationale: 'توثيق أي إجراء لم يُنفذ يُعد خرقاً قانونياً وأخلاقياً جسيماً يعرض حياة المريض للخطر. الروح الجماعية تعني المساعدة الفعلية في فحص المريض ثم توثيق القراءات الحقيقية.'
+                rationale: {
+                    ar: 'ثقافة سلامة المرضى (Speak Up for Safety) تتطلب التدخل الفوري والمهني اللبق لمنع انتقال العدوى بين المرضى دون تشهير، مع التصعيد عند تكرار المخالفة.',
+                    en: 'A strong "Speak Up for Safety" culture requires respectful, immediate private intervention to prevent cross-contamination, with escalation if unsafe behavior continues.'
+                }
             },
             {
-                tag: 'تسليم الشفت (Handover - SBAR)',
-                question: 'أثناء استلامكِ للشفت (Handover) لحالة مريض حرج، لاحظتِ نقصاً واضحاً في المعلومات الموثقة حول آخر تحاليل الدم والأدوية المعطاة. كيف تتصرفين؟',
-                options: [
-                    'استلام الشفت بسرعة دون أسئلة حتى لا يتأخر الزميل في الانصراف.',
-                    'طلب توضيح فوري من الزميل المسلم ومراجعة الملف الطبي معاً بجانب سرير المريض باستخدام نموذج SBAR قبل التوقيع على الاستلام.',
-                    'الانتظار لمرور الطبيب الصباحي وسؤاله عن حالة المريض.',
-                    'التوقف عن إعطاء أي أدوية للمريض طوال الشفت.'
-                ],
+                tag: { ar: 'حقوق المريض (Patient Rights)', en: 'Patient Rights & Autonomy' },
+                question: {
+                    ar: 'مريض واعٍ ومدرك تماماً رفض أخذ جرعة مضاد حيوي مهمة رغم شرحكِ لأهميتها. كيف تتصرفين وفق المعايير المهنية؟',
+                    en: 'A fully conscious, competent patient refuses an important dose of antibiotics despite your initial explanation. What is the proper nursing approach?'
+                },
+                options: {
+                    ar: [
+                        'إقناعه بالقوة أو وضع الدواء في عصيره دون علمه لمصلحته.',
+                        'احترام حقه في الرفض، الاستماع لأسبابه وتثقيفه بهدوء حول مخاطر الرفض، إبلاغ الطبيب المعالج، وتوثيق الرفض والتثقيف بدقة في الملف الطبي.',
+                        'ترك الدواء على الطاولة بجواره وتوثيق أنه تم إعطاؤه.',
+                        'الامتناع عن تقديم باقي الرعاية التمريضية له لأنه غير متعاون.'
+                    ],
+                    en: [
+                        'Force him to take it or hide the medication in his juice for his own good.',
+                        'Respect his right to refuse, explore his concerns and calmly educate him on risks, notify the attending physician, and thoroughly document the refusal and education.',
+                        'Leave the medication on his bedside table and chart it as administered.',
+                        'Withhold other nursing care because he is being uncooperative.'
+                    ]
+                },
                 correct: 1,
-                rationale: 'أكثر من نصف الأخطاء الطبية تنتج عن ضعف التواصل أثناء التسليم. الاستلام الآمن بجانب سرير المريض (Bedside Handover) باستخدام SBAR يضمن استمرارية الرعاية دون فجوات.'
+                rationale: {
+                    ar: 'للمريض الواعي الأهلية الكاملة لرفض العلاج (Right to Refuse). دور الممرضة هو الاستكشاف والتثقيف الصحي وإبلاغ الطبيب والتوثيق الدقيق لحماية حقوق المريض والممارس.',
+                    en: 'Competent patients have the legal and ethical Right to Refuse treatment. Nurses must explore concerns, educate neutrally, inform the physician, and document accurately.'
+                }
             },
             {
-                tag: 'سلامة المرضى (Patient Fall & OVR)',
-                question: 'سمعتِ صوت ارتطام داخل غرفة مريض، وعند دخولكِ وجدتِ المريض قد سقط على الأرض بجوار السرير. ما هو الإجراء الصحيح؟',
-                options: [
-                    'رفعه وإعادته للسرير فوراً قبل فحصه حتى لا يراه أحد.',
-                    'عدم تحريكه قبل تقييم وعيه وعلاماته الحيوية وفحصه لاحتمال وجود إصابات أو كسور، ثم إبلاغ الطبيب فوراً، ومساعدته بأمان وتوثيق الحالة ورفع تقرير حادث (OVR).',
-                    'تأنيبه لعدم استخدامه جرس النداء ثم تركه للنهوض بنفسه.',
-                    'الاكتفاء بوضعه على السرير دون إبلاغ الطبيب إذا قال إنه بخير.'
-                ],
-                correct: 1,
-                rationale: 'تحريك المريض قبل التقييم قد يفاقم إصابة في الرأس أو العمود الفقري. يجب التقييم الفوري، إبلاغ الطبيب، مراقبة العلامات العصبية والحيوية، وتوثيق الحادث ورفع OVR لمنع تكرار السقوط.'
-            },
-            {
-                tag: 'تحديد الأولويات (Prioritization - ABCs)',
-                question: 'في بداية الشفت، لديكِ 4 مرضى يحتاجون اهتمامكِ في نفس الوقت؛ أي مريض تبدئين به أولاً؟',
-                options: [
-                    'مريض مستقر يطلب مسكناً خفيفاً لصداع بسيط (درجة الألم 3/10).',
-                    'مريض جاهز للخروج من المستشفى وينتظر أوراق التثقيف.',
-                    'مريض يعاني من ضيق تنفس مفاجئ وانخفاض نسبة الأكسجين في الدم إلى 86% مع ازرقاق خفيف.',
-                    'مريض موعد جرعته الروتينية من الفيتامينات بعد 15 دقيقة.'
-                ],
+                tag: { ar: 'تحديد الأولويات (Prioritization - ABCs)', en: 'Clinical Prioritization (ABCs)' },
+                question: {
+                    ar: 'في بداية الشفت، لديكِ 4 مرضى يحتاجون اهتمامكِ في نفس الوقت؛ أي مريض تبدئين به أولاً؟',
+                    en: 'At the start of your shift, four patients require your attention simultaneously. Whom do you assess first?'
+                },
+                options: {
+                    ar: [
+                        'مريض مستقر يطلب مسكناً خفيفاً لصداع بسيط (درجة الألم 3/10).',
+                        'مريض جاهز للخروج من المستشفى وينتظر أوراق التثقيف.',
+                        'مريض يعاني من ضيق تنفس مفاجئ وانخفاض نسبة الأكسجين في الدم إلى 86% مع ازرقاق خفيف.',
+                        'مريض موعد جرعته الروتينية من الفيتامينات بعد 15 دقيقة.'
+                    ],
+                    en: [
+                        'A stable patient requesting mild analgesia for a 3/10 headache.',
+                        'A patient ready for discharge waiting for educational pamphlets.',
+                        'A patient experiencing sudden shortness of breath with SpO2 dropping to 86% and mild cyanosis.',
+                        'A patient due for routine oral vitamins in 15 minutes.'
+                    ]
+                },
                 correct: 2,
-                rationale: 'وفق قاعدة الأولويات الطبية (ABCs: مجرى الهواء، التنفس، الدورة الدموية)، فإن مشكلة التنفس وانخفاض الأكسجين (Hypoxia) حالة مهددة للحياة تتصدر الأولوية المطلقة فوراً.'
+                rationale: {
+                    ar: 'وفق قاعدة الأولويات الطبية (ABCs: مجرى الهواء، التنفس، الدورة الدموية)، فإن مشكلة التنفس وانخفاض الأكسجين (Hypoxia) حالة مهددة للحياة تتصدر الأولوية المطلقة فوراً.',
+                    en: 'Following the ABCs framework (Airway, Breathing, Circulation), acute respiratory distress and hypoxia (SpO2 86%) are immediately life-threatening and take top priority.'
+                }
+            },
+            {
+                tag: { ar: 'سرية المعلومات (Confidentiality)', en: 'Patient Confidentiality' },
+                question: {
+                    ar: 'اتصل شخص هاتفياً بالقسم وعرّف نفسه بأنه ابن عم أحد المرضى المنومين، وطلب معرفة تفاصيل التشخيص ونتائج التحاليل الطبية للمريض. ما هو تصرفكِ المهني؟',
+                    en: 'Someone calls the nursing unit claiming to be a hospitalized patient’s cousin and asks for the patient’s diagnosis and lab results. What is your professional response?'
+                },
+                options: {
+                    ar: [
+                        'إخباره بكافة تفاصيل التشخيص والنتائج لأنه من أقارب المريض.',
+                        'الاعتذار بلباقة وتوضيح أن سياسة سرية معلومات المرضى تمنع الإفصاح عن أي بيانات طبية عبر الهاتف أو لغير المخولين دون إذن المريض.',
+                        'إعطاؤه نتائج التحاليل فقط دون ذكر التشخيص.',
+                        'إرسال صورة من تقرير المريض له عبر تطبيق واتساب.'
+                    ],
+                    en: [
+                        'Share the full diagnosis and lab results since he is a relative.',
+                        'Politely apologize and explain that patient confidentiality policies prohibit disclosing medical information over the phone or to unauthorized individuals without patient consent.',
+                        'Give him only the lab values without mentioning the diagnosis.',
+                        'Send a photo of the patient’s report via WhatsApp.'
+                    ]
+                },
+                correct: 1,
+                rationale: {
+                    ar: 'الحفاظ على سرية معلومات المريض (Confidentiality) واجب أخلاقي وقانوني صارم. لا يجوز الإفصاح عن أي معلومة طبية عبر الهاتف أو لأي شخص لم يخول له المريض ذلك.',
+                    en: 'Protecting patient confidentiality is a strict legal and ethical obligation. Never disclose clinical details over the phone or to unauthorized callers without explicit patient authorization.'
+                }
+            },
+            {
+                tag: { ar: 'تسليم الشفت (Handover - SBAR)', en: 'Shift Handover (SBAR)' },
+                question: {
+                    ar: 'أثناء استلامكِ للشفت (Handover) لحالة مريض حرج، لاحظتِ نقصاً واضحاً في المعلومات الموثقة حول آخر تحاليل الدم والأدوية المعطاة. كيف تتصرفين؟',
+                    en: 'During shift handover for a critical patient, you notice missing documentation regarding recent lab results and administered medications. How should you handle this?'
+                },
+                options: {
+                    ar: [
+                        'استلام الشفت بسرعة دون أسئلة حتى لا يتأخر الزميل في الانصراف.',
+                        'طلب توضيح فوري من الزميل المسلم ومراجعة الملف الطبي معاً بجانب سرير المريض باستخدام نموذج SBAR قبل إتمام الاستلام.',
+                        'الانتظار لمرور الطبيب الصباحي وسؤاله عن حالة المريض.',
+                        'التوقف عن إعطاء أي أدوية للمريض طوال الشفت.'
+                    ],
+                    en: [
+                        'Accept the handover quickly without questions so your colleague can leave on time.',
+                        'Request immediate clarification from the outgoing nurse and review the chart together during a structured bedside SBAR handover before finalizing transfer of care.',
+                        'Wait for morning physician rounds to ask about the patient’s status.',
+                        'Hold all medications for the patient throughout your entire shift.'
+                    ]
+                },
+                correct: 1,
+                rationale: {
+                    ar: 'أكثر من نصف الأخطاء الطبية تنتج عن ضعف التواصل أثناء التسليم. الاستلام الآمن بجانب سرير المريض (Bedside Handover) باستخدام SBAR يضمن استمرارية الرعاية دون فجوات.',
+                    en: 'Communication breakdowns during handovers are a leading cause of medical errors. A structured bedside SBAR handover ensures safe continuity of care with zero information gaps.'
+                }
             }
         ];
 
         /* =========================================================================
-           3. STATE MANAGEMENT & UI CONTROLLERS
+           4. APPLICATION STATE & BILINGUAL ENGINE
            ========================================================================= */
+        let currentLang = 'ar';
         let currentCountryKey = null;
         let currentCategory = 'all';
 
-        // Quiz state
+        // Quiz State (preserved seamlessly across language toggles)
         let quizIndex = 0;
         let quizScore = 0;
         let quizAnswered = false;
+        let quizSelectedOption = null;
+
+        /**
+         * Toggles between Arabic (RTL) and English (LTR) dynamically without losing state
+         */
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            applyLanguage();
+            showToast(uiStrings[currentLang].toastLangSwitched, 'info');
+        }
+
+        /**
+         * Applies current language to HTML attributes, fonts, static text, and active dynamic views
+         */
+        function applyLanguage() {
+            try {
+                const t = uiStrings[currentLang];
+                const isAr = currentLang === 'ar';
+
+                // 1. Update HTML dir, lang, page title & body font
+                document.documentElement.lang = isAr ? 'ar' : 'en';
+                document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+                document.title = t.pageTitle;
+
+                const body = document.getElementById('app-body');
+                body.classList.remove('font-cairo', 'font-jakarta');
+                body.classList.add(isAr ? 'font-cairo' : 'font-jakarta');
+
+                // 2. Update Toggle Button Label
+                document.getElementById('lang-toggle-label').textContent = t.langToggleText;
+
+                // 3. Update all static data-i18n elements
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (t[key] && typeof t[key] === 'string') {
+                        el.textContent = t[key];
+                    }
+                });
+
+                // 4. Update Search Placeholder
+                const searchInput = document.getElementById('question-search');
+                if (searchInput) {
+                    searchInput.placeholder = t.searchPlaceholder;
+                }
+
+                // 5. Flip Directional Arrow Icons for RTL vs LTR
+                document.querySelectorAll('.dir-arrow').forEach(icon => {
+                    icon.classList.remove('fa-arrow-left', 'fa-arrow-right');
+                    icon.classList.add(isAr ? 'fa-arrow-left' : 'fa-arrow-right');
+                });
+                document.querySelectorAll('.dir-back-arrow').forEach(icon => {
+                    icon.classList.remove('fa-arrow-left', 'fa-arrow-right');
+                    icon.classList.add(isAr ? 'fa-arrow-right' : 'fa-arrow-left');
+                });
+
+                // 6. Re-render active Country Questions Bank if open
+                if (currentCountryKey) {
+                    updateCountryHeaderUI();
+                    renderQuestions();
+                }
+
+                // 7. Re-render active Quiz View or Results View if open
+                const quizSection = document.getElementById('quiz-section');
+                if (!quizSection.classList.contains('hidden')) {
+                    const resultsView = document.getElementById('quiz-results-view');
+                    if (!resultsView.classList.contains('hidden')) {
+                        renderQuizResultsUI();
+                    } else {
+                        renderQuizQuestion(true);
+                    }
+                }
+            } catch (err) {
+                console.error('Language switch error:', err);
+            }
+        }
 
         /**
          * Displays a non-blocking toast notification (Replaces alert())
@@ -824,7 +1474,7 @@
                 const toast = document.createElement('div');
                 const bgClass = type === 'success' ? 'bg-medical-700 text-white' : 'bg-slate-800 text-white';
                 toast.className = `pointer-events-auto flex items-center gap-2.5 px-5 py-3 rounded-2xl shadow-xl text-sm font-bold transform transition-all duration-300 translate-y-2 opacity-0 ${bgClass}`;
-                toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-medical-200' : 'fa-circle-info'}"></i><span>${message}</span>`;
+                toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-medical-200' : 'fa-globe text-medical-300'}"></i><span>${message}</span>`;
                 container.appendChild(toast);
 
                 requestAnimationFrame(() => {
@@ -834,17 +1484,19 @@
                 setTimeout(() => {
                     toast.classList.add('opacity-0', 'translate-y-2');
                     setTimeout(() => toast.remove(), 300);
-                }, 2600);
+                }, 2400);
             } catch (err) {
                 console.error('Toast error:', err);
             }
         }
 
         /**
-         * Safely copies text to clipboard using document.execCommand('copy')
+         * Safely copies answer text to clipboard using document.execCommand('copy')
          */
-        function copyAnswerText(text) {
+        function copyAnswerByIndex(filteredIdx) {
             try {
+                const text = window.__currentAnswersMap && window.__currentAnswersMap[filteredIdx];
+                if (!text) return;
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 textarea.style.position = 'fixed';
@@ -853,43 +1505,36 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                showToast('تم نسخ الإجابة النموذجية بنجاح');
+                showToast(uiStrings[currentLang].toastCopied, 'success');
             } catch (err) {
-                showToast('تعذر النسخ، يرجى التحديد والنسخ يدوياً', 'info');
+                showToast(uiStrings[currentLang].toastCopyErr, 'info');
             }
         }
 
-        /**
-         * Scrolls smoothly to country selection section
-         */
         function scrollToCountries() {
             closeQuizModal(false);
             const el = document.getElementById('countries-section');
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        /**
-         * Returns to home view from quiz
-         */
         function showHomeSection() {
             closeQuizModal(true);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /**
-         * Selects a country, highlights its card, and displays its interview questions
-         */
+        /* =========================================================================
+           5. COUNTRY SELECTION & QUESTION BANK LOGIC
+           ========================================================================= */
         function selectCountry(countryKey) {
             try {
                 if (!countryData[countryKey]) return;
                 currentCountryKey = countryKey;
                 currentCategory = 'all';
 
-                // Reset search input
                 const searchInput = document.getElementById('question-search');
                 if (searchInput) searchInput.value = '';
 
-                // Update active visual styling on country cards
+                // Highlight selected card
                 document.querySelectorAll('.country-card').forEach(card => {
                     card.classList.remove('border-medical-600', 'ring-4', 'ring-medical-100', 'bg-medical-50/40');
                     card.classList.add('border-slate-200', 'bg-white');
@@ -901,30 +1546,28 @@
                     activeCard.classList.add('border-medical-600', 'ring-4', 'ring-medical-100', 'bg-medical-50/40');
                 }
 
-                // Populate header info
-                const data = countryData[countryKey];
-                document.getElementById('selected-country-badge').textContent = data.badge;
-                document.getElementById('selected-country-title').textContent = `أسئلة مقابلات التمريض في ${data.name}`;
-                document.getElementById('selected-country-subtitle').textContent = data.subtitle;
-
-                // Reset category filter UI
+                updateCountryHeaderUI();
                 updateCategoryButtonsUI();
 
-                // Show questions section & render list
                 const qSection = document.getElementById('questions-section');
                 qSection.classList.remove('hidden');
                 renderQuestions();
 
-                // Smooth scroll to questions bank
                 qSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (err) {
-                console.error('Error selecting country:', err);
+                console.error('Select country error:', err);
             }
         }
 
-        /**
-         * Updates active category filter and re-renders questions
-         */
+        function updateCountryHeaderUI() {
+            if (!currentCountryKey) return;
+            const data = countryData[currentCountryKey];
+            const t = uiStrings[currentLang];
+            document.getElementById('selected-country-badge').textContent = data.badge[currentLang];
+            document.getElementById('selected-country-title').textContent = `${t.countryQuestionsPrefix} ${data.name[currentLang]}`;
+            document.getElementById('selected-country-subtitle').textContent = data.subtitle[currentLang];
+        }
+
         function setCategoryFilter(category) {
             currentCategory = category;
             updateCategoryButtonsUI();
@@ -942,34 +1585,31 @@
             });
         }
 
-        /**
-         * Helper for category badge label & styling
-         */
         function getCategoryMeta(cat) {
+            const t = uiStrings[currentLang];
             const map = {
-                personal: { label: 'شخصي ومهني', classes: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-                clinical: { label: 'فني وتمريضي', classes: 'bg-medical-50 text-medical-700 border-medical-200' },
-                quality: { label: 'جودة وسلامة', classes: 'bg-amber-50 text-amber-700 border-amber-200' }
+                personal: { label: t.catPersonal, classes: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+                clinical: { label: t.catClinical, classes: 'bg-medical-50 text-medical-700 border-medical-200' },
+                quality: { label: t.catQuality, classes: 'bg-amber-50 text-amber-700 border-amber-200' }
             };
             return map[cat] || map.clinical;
         }
 
-        /**
-         * Renders filtered accordion questions for the currently selected country
-         */
         function renderQuestions() {
             try {
                 if (!currentCountryKey) return;
                 const container = document.getElementById('questions-list');
+                const t = uiStrings[currentLang];
                 const query = (document.getElementById('question-search').value || '').trim().toLowerCase();
                 const allQuestions = countryData[currentCountryKey].questions;
 
                 const filtered = allQuestions.filter(item => {
                     const matchesCat = currentCategory === 'all' || item.category === currentCategory;
-                    const matchesQuery = !query ||
-                        item.q.toLowerCase().includes(query) ||
-                        item.a.toLowerCase().includes(query) ||
-                        item.tip.toLowerCase().includes(query);
+                    const qText = item.q[currentLang].toLowerCase();
+                    const aText = item.a[currentLang].toLowerCase();
+                    const tipText = item.tip[currentLang].toLowerCase();
+                    // Also allow searching English terms while in Arabic mode (e.g., CBAHI, JCI, SBAR)
+                    const matchesQuery = !query || qText.includes(query) || aText.includes(query) || tipText.includes(query);
                     return matchesCat && matchesQuery;
                 });
 
@@ -979,22 +1619,26 @@
                             <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3 text-2xl">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
-                            <h4 class="font-bold text-slate-700 mb-1">لا توجد أسئلة مطابقة لبحثكِ</h4>
-                            <p class="text-xs sm:text-sm text-slate-500">جربي البحث بكلمة أخرى أو اختاري تصنيف "الكل".</p>
+                            <h4 class="font-bold text-slate-700 mb-1">${t.noResultsTitle}</h4>
+                            <p class="text-xs sm:text-sm text-slate-500">${t.noResultsSub}</p>
                         </div>
                     `;
                     return;
                 }
 
+                // Store plain answers safely for copy button
+                window.__currentAnswersMap = {};
+
                 container.innerHTML = filtered.map((item, idx) => {
                     const meta = getCategoryMeta(item.category);
-                    const formattedAnswer = item.a.replace(/\n/g, '<br>');
-                    const safeCopyText = item.a.replace(/'/g, "\\'").replace(/\n/g, ' ');
+                    const rawAnswer = item.a[currentLang];
+                    window.__currentAnswersMap[idx] = rawAnswer;
+                    const formattedAnswer = rawAnswer.replace(/\n/g, '<br>');
                     const isFirst = idx === 0;
 
                     return `
                         <div class="accordion-item rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all hover:border-medical-300">
-                            <button onclick="toggleAccordion(${idx})" class="w-full text-right p-5 flex items-start justify-between gap-4 focus:outline-none hover:bg-slate-50/70 transition-colors">
+                            <button onclick="toggleAccordion(${idx})" class="w-full text-start p-5 flex items-start justify-between gap-4 focus:outline-none hover:bg-slate-50/70 transition-colors">
                                 <div class="flex items-start gap-3.5">
                                     <span class="w-8 h-8 rounded-xl bg-medical-50 text-medical-700 font-extrabold text-sm flex items-center justify-center flex-shrink-0 border border-medical-200 mt-0.5">
                                         ${idx + 1}
@@ -1004,11 +1648,11 @@
                                             ${meta.label}
                                         </span>
                                         <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-relaxed">
-                                            ${item.q}
+                                            ${item.q[currentLang]}
                                         </h3>
                                     </div>
                                 </div>
-                                <span id="acc-icon-${idx}" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${isFirst ? 'rotate-180 bg-medical-600 text-white' : ''}">
+                                <span id="acc-icon-${idx}" class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${isFirst ? 'rotate-180 bg-medical-600 text-white' : 'bg-slate-100 text-slate-500'}">
                                     <i class="fa-solid fa-chevron-down text-xs"></i>
                                 </span>
                             </button>
@@ -1019,24 +1663,24 @@
                                     <div class="flex items-center justify-between gap-2 mb-2.5">
                                         <span class="inline-flex items-center gap-1.5 text-xs font-extrabold text-medical-700">
                                             <i class="fa-solid fa-circle-check"></i>
-                                            الإجابة النموذجية المقترحة:
+                                            ${t.modelAnswerTitle}
                                         </span>
-                                        <button onclick="copyAnswerText('${safeCopyText}')" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-medical-700 hover:bg-medical-50 transition-colors">
+                                        <button onclick="copyAnswerByIndex(${idx})" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-medical-700 hover:bg-medical-50 transition-colors">
                                             <i class="fa-regular fa-copy"></i>
-                                            <span>نسخ</span>
+                                            <span>${t.copyBtn}</span>
                                         </button>
                                     </div>
                                     <p class="text-slate-700 text-sm leading-loose">${formattedAnswer}</p>
                                 </div>
 
-                                <!-- Quick Interview Tip -->
+                                <!-- Pro Interview Tip -->
                                 <div class="mt-3 rounded-2xl bg-medical-50/80 border border-medical-200 p-3.5 sm:p-4 flex items-start gap-3">
                                     <div class="w-7 h-7 rounded-lg bg-medical-600 text-white flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
                                         <i class="fa-solid fa-lightbulb"></i>
                                     </div>
                                     <div class="text-xs sm:text-sm text-medical-900 leading-relaxed">
-                                        <span class="font-extrabold">نصيحة المقابلة: </span>
-                                        <span>${item.tip}</span>
+                                        <span class="font-extrabold">${t.tipLabel} </span>
+                                        <span>${item.tip[currentLang]}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1048,9 +1692,6 @@
             }
         }
 
-        /**
-         * Toggles individual accordion item
-         */
         function toggleAccordion(idx) {
             const body = document.getElementById(`acc-body-${idx}`);
             const icon = document.getElementById(`acc-icon-${idx}`);
@@ -1069,18 +1710,15 @@
         }
 
         /* =========================================================================
-           4. INTERACTIVE SITUATIONAL QUIZ ENGINE
+           6. BILINGUAL INTERACTIVE SITUATIONAL QUIZ ENGINE
            ========================================================================= */
-
         function openQuizModal() {
             document.getElementById('hero-section').classList.add('hidden');
             document.getElementById('countries-section').classList.add('hidden');
             document.getElementById('questions-section').classList.add('hidden');
             document.getElementById('quiz-promo-section').classList.add('hidden');
 
-            const quizSection = document.getElementById('quiz-section');
-            quizSection.classList.remove('hidden');
-
+            document.getElementById('quiz-section').classList.remove('hidden');
             restartQuiz();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -1103,39 +1741,43 @@
             quizIndex = 0;
             quizScore = 0;
             quizAnswered = false;
+            quizSelectedOption = null;
 
             document.getElementById('quiz-results-view').classList.add('hidden');
             document.getElementById('quiz-active-view').classList.remove('hidden');
-            renderQuizQuestion();
+            renderQuizQuestion(false);
         }
 
-        function renderQuizQuestion() {
+        /**
+         * Renders current quiz scenario; if preserveState is true (e.g., mid-quiz language toggle),
+         * restores the answered state and rationale in the new language seamlessly.
+         */
+        function renderQuizQuestion(preserveState = false) {
             try {
                 const scenario = quizScenarios[quizIndex];
-                quizAnswered = false;
-
-                // Update Progress
+                const t = uiStrings[currentLang];
                 const total = quizScenarios.length;
-                document.getElementById('quiz-progress-text').textContent = `الموقف ${quizIndex + 1} من ${total}`;
-                document.getElementById('quiz-score-live').textContent = `النقاط: ${quizScore}`;
+
+                if (!preserveState) {
+                    quizAnswered = false;
+                    quizSelectedOption = null;
+                }
+
+                document.getElementById('quiz-progress-text').textContent = t.progressText(quizIndex + 1, total);
+                document.getElementById('quiz-score-live').textContent = t.scoreLive(quizScore);
                 document.getElementById('quiz-progress-bar').style.width = `${((quizIndex + 1) / total) * 100}%`;
 
-                // Update Tag & Question Text
-                document.getElementById('quiz-scenario-tag').innerHTML = `<i class="fa-solid fa-stethoscope"></i><span>${scenario.tag}</span>`;
-                document.getElementById('quiz-question-text').textContent = scenario.question;
+                document.getElementById('quiz-scenario-tag').innerHTML = `<i class="fa-solid fa-stethoscope"></i><span>${scenario.tag[currentLang]}</span>`;
+                document.getElementById('quiz-question-text').textContent = scenario.question[currentLang];
 
-                // Hide Feedback & Next Button
-                document.getElementById('quiz-feedback-box').classList.add('hidden');
-                document.getElementById('quiz-next-btn').classList.add('hidden');
-
-                // Render 4 Options
-                const letters = ['أ', 'ب', 'ج', 'د'];
+                const letters = currentLang === 'ar' ? ['أ', 'ب', 'ج', 'د'] : ['A', 'B', 'C', 'D'];
                 const optionsContainer = document.getElementById('quiz-options-container');
-                optionsContainer.innerHTML = scenario.options.map((opt, idx) => `
+
+                optionsContainer.innerHTML = scenario.options[currentLang].map((opt, idx) => `
                     <button
                         id="quiz-opt-${idx}"
                         onclick="handleQuizOptionClick(${idx})"
-                        class="w-full text-right p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-medical-500 hover:bg-medical-50/40 transition-all flex items-start gap-3.5 group focus:outline-none"
+                        class="w-full text-start p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-medical-500 hover:bg-medical-50/40 transition-all flex items-start gap-3.5 group focus:outline-none"
                     >
                         <span id="quiz-opt-letter-${idx}" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm flex items-center justify-center flex-shrink-0 group-hover:bg-medical-600 group-hover:text-white transition-colors">
                             ${letters[idx]}
@@ -1145,6 +1787,13 @@
                         </span>
                     </button>
                 `).join('');
+
+                if (preserveState && quizAnswered && quizSelectedOption !== null) {
+                    applyQuizAnsweredUI(quizSelectedOption);
+                } else {
+                    document.getElementById('quiz-feedback-box').classList.add('hidden');
+                    document.getElementById('quiz-next-btn').classList.add('hidden');
+                }
             } catch (err) {
                 console.error('Quiz render error:', err);
             }
@@ -1153,19 +1802,27 @@
         function handleQuizOptionClick(selectedIdx) {
             if (quizAnswered) return;
             quizAnswered = true;
+            quizSelectedOption = selectedIdx;
 
             const scenario = quizScenarios[quizIndex];
-            const isCorrect = selectedIdx === scenario.correct;
-
-            if (isCorrect) {
+            if (selectedIdx === scenario.correct) {
                 quizScore++;
-                document.getElementById('quiz-score-live').textContent = `النقاط: ${quizScore}`;
+                document.getElementById('quiz-score-live').textContent = uiStrings[currentLang].scoreLive(quizScore);
             }
 
-            // Lock all buttons and apply semantic colors
-            scenario.options.forEach((_, idx) => {
+            applyQuizAnsweredUI(selectedIdx);
+        }
+
+        function applyQuizAnsweredUI(selectedIdx) {
+            const scenario = quizScenarios[quizIndex];
+            const t = uiStrings[currentLang];
+            const isCorrect = selectedIdx === scenario.correct;
+
+            scenario.options[currentLang].forEach((_, idx) => {
                 const btn = document.getElementById(`quiz-opt-${idx}`);
                 const badge = document.getElementById(`quiz-opt-letter-${idx}`);
+                if (!btn || !badge) return;
+
                 btn.disabled = true;
                 btn.classList.remove('hover:border-medical-500', 'hover:bg-medical-50/40');
 
@@ -1184,7 +1841,6 @@
                 }
             });
 
-            // Show Feedback Box with Professional Rationale
             const fbBox = document.getElementById('quiz-feedback-box');
             const fbIcon = document.getElementById('quiz-feedback-icon');
             const fbTitle = document.getElementById('quiz-feedback-title');
@@ -1196,27 +1852,26 @@
                 fbBox.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900');
                 fbIcon.className = 'w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 text-lg mt-0.5';
                 fbIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
-                fbTitle.textContent = 'إجابة صحيحة! أحسنتِ التصرف المهني.';
+                fbTitle.textContent = t.feedbackCorrect;
             } else {
                 fbBox.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-900');
                 fbIcon.className = 'w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center flex-shrink-0 text-lg mt-0.5';
                 fbIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                fbTitle.textContent = 'إجابة غير دقيقة — إليكِ آلية التعامل الصحيحة:';
+                fbTitle.textContent = t.feedbackWrong;
             }
 
-            fbRationale.textContent = scenario.rationale;
+            fbRationale.textContent = scenario.rationale[currentLang];
 
-            // Show Next or Finish button
             const nextBtn = document.getElementById('quiz-next-btn');
             const nextText = document.getElementById('quiz-next-btn-text');
-            nextText.textContent = quizIndex === quizScenarios.length - 1 ? 'عرض النتيجة النهائية' : 'الموقف التالي';
+            nextText.textContent = quizIndex === quizScenarios.length - 1 ? t.finishQuiz : t.nextScenario;
             nextBtn.classList.remove('hidden');
         }
 
         function nextQuizQuestion() {
             if (quizIndex < quizScenarios.length - 1) {
                 quizIndex++;
-                renderQuizQuestion();
+                renderQuizQuestion(false);
             } else {
                 showQuizResults();
             }
@@ -1225,13 +1880,17 @@
         function showQuizResults() {
             document.getElementById('quiz-active-view').classList.add('hidden');
             document.getElementById('quiz-results-view').classList.remove('hidden');
+            renderQuizResultsUI();
+        }
 
+        function renderQuizResultsUI() {
+            const t = uiStrings[currentLang];
             const total = quizScenarios.length;
             const wrong = total - quizScore;
             const percent = Math.round((quizScore / total) * 100);
 
             document.getElementById('result-percentage').textContent = `${percent}%`;
-            document.getElementById('result-fraction').textContent = `${quizScore} من ${total} إجابات صحيحة`;
+            document.getElementById('result-fraction').textContent = t.resultFraction(quizScore, total);
             document.getElementById('result-correct-count').textContent = quizScore;
             document.getElementById('result-wrong-count').textContent = wrong;
 
@@ -1241,17 +1900,20 @@
             if (percent >= 80) {
                 iconEl.className = 'w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-5 shadow-md bg-emerald-100 text-emerald-600';
                 iconEl.innerHTML = '<i class="fa-solid fa-award"></i>';
-                evalEl.textContent = 'أداء متميز جداً! لديكِ وعي سريري ومهني عالٍ يؤهلكِ لاجتياز مقابلات التمريض بثقة واقتدار.';
+                evalEl.textContent = t.evalHigh;
             } else if (percent >= 60) {
                 iconEl.className = 'w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-5 shadow-md bg-medical-100 text-medical-700';
                 iconEl.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
-                evalEl.textContent = 'مستوى جيد جداً! لديكِ أساس تمريضي قوي، ويُنصح بمراجعة المواقف التي أخطأتِ بها لتعزيز جاهزيتكِ الكاملة للمقابلة.';
+                evalEl.textContent = t.evalMid;
             } else {
                 iconEl.className = 'w-20 h-20 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-5 shadow-md bg-amber-100 text-amber-600';
                 iconEl.innerHTML = '<i class="fa-solid fa-book-medical"></i>';
-                evalEl.textContent = 'بداية جيدة للتدريب! ننصحكِ بمراجعة بنك الأسئلة النموذجية ومعايير سلامة المرضى ثم إعادة الاختبار لتحقيق نتيجة أعلى.';
+                evalEl.textContent = t.evalLow;
             }
         }
+
+        // Initialize UI on load
+        applyLanguage();
     </script>
 </body>
 </html>
